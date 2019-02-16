@@ -13,10 +13,14 @@ namespace Gym.Infrastructure.Services
 
         ExerciseDTO Get(Guid id);
 
-        IEnumerable<ExerciseDTO> Get(BodyPart bodyPart);
+        IEnumerable<ExerciseDTO> Get(Category category);
 
         IEnumerable<ExerciseDTO> GetAll();
 
-        void CreateNew(string name, BodyPart bodyPart);
+        void CreateNew(string name, Category category);
+
+        void Update(Guid id, string name, Category category);
+
+        void Delete(Guid id);
     }
 }

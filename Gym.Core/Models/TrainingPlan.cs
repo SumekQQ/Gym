@@ -20,6 +20,12 @@ namespace Gym.Core.Models
             setExerciseList(exercises);
         }
 
+        public void Update(string name, IEnumerable<Exercise> exercises)
+        {
+            setName(name);
+            setExerciseList(exercises);
+        }
+
         private void setName(string name)
         {
             var pattern = @"[a-zA-Z0-9._.-]$";
@@ -34,6 +40,8 @@ namespace Gym.Core.Models
         {
             if (exercises == null || exercises.Count() < 1)
                 throw new Exception("Provided exercises list cannot be empty");
+
+            exercises = exercises.OrderBy(x => x.Category);
 
             if (Exercises != exercises)
                 Exercises = exercises;

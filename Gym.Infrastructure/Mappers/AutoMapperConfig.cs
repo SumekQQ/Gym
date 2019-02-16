@@ -11,7 +11,7 @@ namespace Gym.Infrastructure.Mappers
             return new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<Exercise, ExerciseDTO>();
-                cfg.CreateMap<Result, ResultDTO>();
+                cfg.CreateMap<Result, WeightResultDTO>();
                 cfg.CreateMap<TrainingDay, TrainingDayDTO>();
                 cfg.CreateMap<TrainingPlan, TrainingPlanDTO>();
             }).CreateMapper();

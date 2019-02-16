@@ -11,7 +11,8 @@ namespace Gym.Infrastructure.Repositories
         public List<Exercise> Exercises { get; set; }
         public List<TrainingPlan> TrainingPlans { get; set; }
         public List<TrainingDay> TrainingDay { get; set; }
-        public List<Result> Results { get; set; }
+        public List<WeightResult> WeightResults { get; set; }
+        public List<CardioResult> CardioResults { get; set; }
 
         public static FakeDataBase GetInstance()
         {
@@ -26,18 +27,19 @@ namespace Gym.Infrastructure.Repositories
             Exercises = createExercisesList();
             TrainingPlans = createTrainingPlansList();
             TrainingDay = createTrainingDayList();
-            Results = createResultsList();
+            WeightResults = createWeightResultsList();
+            CardioResults = createCardioResultsList();
         }
 
         private List<Exercise> createExercisesList()
         {
             return new List<Exercise>
             {
-                new Exercise("Bench press", BodyPart.Chest),
-                new Exercise("Squad", BodyPart.Legs),
-                new Exercise("Planks", BodyPart.Stomach),
-                new Exercise("OHP", BodyPart.Arms),
-                new Exercise("Deadth lift", BodyPart.Back)
+                new Exercise("Bench press", Category.Chest),
+                new Exercise("Squad", Category.Legs),
+                new Exercise("Planks", Category.Abs),
+                new Exercise("OHP", Category.Shoulders),
+                new Exercise("Deadth lift", Category.Back)
             };
         }
 
@@ -59,17 +61,22 @@ namespace Gym.Infrastructure.Repositories
             };
         }
 
-        private List<Result> createResultsList()
+        private List<WeightResult> createWeightResultsList()
         {
-            return new List<Result>
-            {
-                new Result(TrainingDay.First(), Exercises.First(), 3, 5f, 8),
-                new Result(TrainingDay.First(), Exercises.Last(), 4, 5.5f, 9),
-                new Result(TrainingDay.First(), Exercises.Skip(3).First(), 7, 10.5f, 10),
-                new Result(TrainingDay.Last(), Exercises.First(), 3, 5f, 8),
-                new Result(TrainingDay.Last(), Exercises.Last(), 4, 5.5f, 9),
-                new Result(TrainingDay.Last(), Exercises.Skip(3).First(), 7, 10.5f, 10),
-            };
+            return new List<WeightResult>();
+            /*  {
+                  new WeightResult(TrainingDay.First(), Exercises.First(), 3, 5f, 8),
+                    new WeightResult(TrainingDay.First(), Exercises.Last(), 4, 5.5f, 9),
+                    new WeightResult(TrainingDay.First(), Exercises.Skip(3).First(), 7, 10.5f, 10),
+                    new WeightResult(TrainingDay.Last(), Exercises.First(), 3, 5f, 8),
+                    new WeightResult(TrainingDay.Last(), Exercises.Last(), 4, 5.5f, 9),
+                    new WeightResult(TrainingDay.Last(), Exercises.Skip(3).First(), 7, 10.5f, 10),
+              };*/
+        }
+
+        private List<CardioResult> createCardioResultsList()
+        {
+            return new List<CardioResult>();
         }
     }
 }

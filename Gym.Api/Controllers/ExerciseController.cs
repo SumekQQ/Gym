@@ -41,5 +41,21 @@ namespace Gym.Api.Controllers
 
             return Created($"get/{command.Name}", null);
         }
+
+        [HttpPut]
+        public ActionResult Update([FromBody] UpdateExercise command)
+        {
+            Dispatch(command);
+
+            return Created($"get/{command.Name}", null);
+        }
+
+        [HttpDelete]
+        public ActionResult Delete(Guid id)
+        {
+            _exerciseService.Delete(id);
+
+            return Ok();
+        }
     }
 }

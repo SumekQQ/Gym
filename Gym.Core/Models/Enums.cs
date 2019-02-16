@@ -1,11 +1,14 @@
 ﻿namespace Gym.Core.Models
 {
-    public enum BodyPart
+    public enum Category
     {
-        Legs,
-        Arms,
-        Stomach,
+        Cardio,
+        Shoulders,
+        Triceps,
+        Biceps,
+        Chest,
         Back,
-        Chest
+        Legs,
+        Abs
     }
 }

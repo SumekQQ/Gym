@@ -7,15 +7,29 @@ namespace Gym.Core.Models
     {
         public Guid Id { get; protected set; }
         public string Name { get; protected set; }
-        public BodyPart BodyPart { get; protected set; }
+        public Category Category { get; protected set; }
+        public bool IsCustom { get; protected set; }
 
         protected Exercise() { }
 
-        public Exercise(string name, BodyPart bodyPart)
+        public Exercise(string name, Category category)
         {
             Id = Guid.NewGuid();
             setName(name);
-            setBodyPart(bodyPart);
+            setCategory(category);
+            IsCustom = true;
+        }
+
+        public void Update(string name, Category category)
+        {
+            if (IsCustom)
+                throw new Exception("Can not update default exercise");
+
+            if (Category == Category.Cardio && category != Category.Cardio)
+                throw new Exception("Can not update exercise asigned to cardio category.");
+
+            setName(name);
+            setCategory(Category);
         }
 
         private void setName(string name)
@@ -28,10 +42,10 @@ namespace Gym.Core.Models
                 Name = name;
         }
 
-        private void setBodyPart(BodyPart bodyPart)
+        private void setCategory(Category category)
         {
-            if (BodyPart != bodyPart)
-                BodyPart = bodyPart;
+            if (Category != category)
+                Category = category;
         }
     }
 }

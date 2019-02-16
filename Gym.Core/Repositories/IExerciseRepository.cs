@@ -10,7 +10,7 @@ namespace Gym.Core.Repositories
 
         Exercise Get(string name);
 
-        IEnumerable<Exercise> Get(BodyPart bodyPart);
+        IEnumerable<Exercise> Get(Category category);
 
         IEnumerable<Exercise> GetAll();
 
@@ -18,13 +18,13 @@ namespace Gym.Core.Repositories
 
         bool IsExist(string name);
 
-        bool IsExist(BodyPart bodyPart);
+        bool IsExist(Category category);
 
         bool IsExist(Exercise exercise);
 
         void Add(Exercise exercise);
 
-        void Remove(Guid id);
+        void Delete(Exercise exercise);
 
         void Update(Exercise exercise);
     }

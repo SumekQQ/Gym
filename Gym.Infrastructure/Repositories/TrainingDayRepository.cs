@@ -55,16 +55,14 @@ namespace Gym.Infrastructure.Repositories
             return _trainingDays.Exists(x => x.Id == id);
         }
 
-        public void Remove(Guid id)
+        public void Delete(TrainingDay trainingDay)
         {
-            var trainingDay = Get(id);
-
             _trainingDays.Remove(trainingDay);
         }
 
         public void Update(TrainingDay trainingDay)
         {
-
+            //ToDo
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Gym.Core.Repositories;
 using Gym.Infrastructure.Commands;
-using Gym.Infrastructure.Commands.TrainingPlan;
+using Gym.Infrastructure.Commands.TrainingDay;
 using Microsoft.AspNetCore.Mvc;
 using System;
 
@@ -35,11 +35,17 @@ namespace Gym.Api.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreateNew([FromBody] CreateTrainingPlan command)
+        public ActionResult CreateNew([FromBody] CreateTrainingDay command)
         {
             Dispatch(command);
 
-            return Created($"get/{command.Name}", null);
+            return Created($"get/", null);
+        }
+  
+        [HttpPut]
+        public ActionResult Update([FromBody] UpdateTrainingDay command)
+        {
+            return Created($"get/", null);
         }
     }
 }

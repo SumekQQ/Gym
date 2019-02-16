@@ -25,9 +25,9 @@ namespace Gym.Infrastructure.Repositories
             return _exercises.SingleOrDefault(x => x.Name == name);
         }
 
-        public IEnumerable<Exercise> Get(BodyPart bodyPart)
+        public IEnumerable<Exercise> Get(Category category)
         {
-            return _exercises.Where(x => x.BodyPart == bodyPart);
+            return _exercises.Where(x => x.Category == category);
         }
 
         public IEnumerable<Exercise> GetAll()
@@ -45,9 +45,9 @@ namespace Gym.Infrastructure.Repositories
             return _exercises.Exists(x => x.Name == name);
         }
 
-        public bool IsExist(BodyPart bodyPart)
+        public bool IsExist(Category category)
         {
-            return _exercises.Exists(x => x.BodyPart == bodyPart);
+            return _exercises.Exists(x => x.Category == category);
         }
 
         public bool IsExist(Exercise exercise)
@@ -55,16 +55,14 @@ namespace Gym.Infrastructure.Repositories
             return _exercises.Exists(x => x == exercise);
         }
 
-        public void Remove(Guid id)
+        public void Delete(Exercise exercise)
         {
-            var exercise = Get(id);
-
             _exercises.Remove(exercise);
         }
 
         public void Update(Exercise exercise)
         {
-            throw new NotImplementedException();
+            //ToDo
         }
     }
 }

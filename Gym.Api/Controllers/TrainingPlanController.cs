@@ -1,6 +1,6 @@
-﻿using Gym.Core.Repositories;
-using Gym.Infrastructure.Commands;
+﻿using Gym.Infrastructure.Commands;
 using Gym.Infrastructure.Commands.TrainingPlan;
+using Gym.Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
 
@@ -8,30 +8,30 @@ namespace Gym.Api.Controllers
 {
     public class TrainingPlanController : BaseController
     {
-        private readonly ITrainingPlanRepository _trainingPlanRepository;
+        private readonly ITrainingPlanService _trainingPlanService;
 
-        public TrainingPlanController(ITrainingPlanRepository trainingPlanRepository,
+        public TrainingPlanController(ITrainingPlanService trainingPlanService,
             ICommandDispatcher commandDispatcher) : base(commandDispatcher)
         {
-            _trainingPlanRepository = trainingPlanRepository;
+            _trainingPlanService = trainingPlanService;
         }
 
         [HttpGet]
         public ActionResult GetAll()
         {
-            return Collection(_trainingPlanRepository.GetAll());
+            return Collection(_trainingPlanService.GetAll());
         }
 
         [HttpGet]
         public ActionResult Get(Guid id)
         {
-            return Single(_trainingPlanRepository.Get(id));
+            return Single(_trainingPlanService.Get(id));
         }
 
         [HttpGet]
         public ActionResult Get(string name)
         {
-            return Single(_trainingPlanRepository.Get(name));
+            return Single(_trainingPlanService.Get(name));
         }
 
         [HttpPost]
@@ -40,6 +40,22 @@ namespace Gym.Api.Controllers
             Dispatch(command);
 
             return Created($"get/{command.Name}", null);
+        }
+
+        [HttpPut]
+        public ActionResult Update([FromBody] UpdateTrainingPlan command)
+        {
+            Dispatch(command);
+
+            return Ok();
+        }
+
+        [HttpDelete]
+        public ActionResult Delete(Guid id)
+        {
+            _trainingPlanService.Delete(id);
+
+            return Ok();
         }
     }
 }

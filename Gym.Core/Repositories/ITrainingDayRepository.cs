@@ -24,7 +24,7 @@ namespace Gym.Core.Repositories
 
         void Add(TrainingDay trainingDay);
 
-        void Remove(Guid id);
+        void Delete(TrainingDay trainingDay);
 
         void Update(TrainingDay trainingDay);
     }

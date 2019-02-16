@@ -6,31 +6,31 @@ using System.Linq;
 
 namespace Gym.Infrastructure.Repositories
 {
-    public class ResultRepository : IResultRepository
+    public class CardioResultRepository : ICardioResultRepository
     {
-        private List<Result> _results = FakeDataBase.GetInstance().Results;
+        private List<CardioResult> _results = FakeDataBase.GetInstance().CardioResults;
 
-        public void Add(Result result)
+        public void Add(CardioResult result)
         {
             _results.Add(result);
         }
 
-        public Result Get(Guid id)
+        public CardioResult Get(Guid id)
         {
             return _results.Single(x => x.Id == id);
         }
 
-        public IEnumerable<Result> Get(TrainingDay trainingDay)
+        public IEnumerable<CardioResult> Get(TrainingDay trainingDay)
         {
             return _results.Where(x => x.TrainingDay == trainingDay);
         }
 
-        public IEnumerable<Result> Get(Exercise exercise)
+        public IEnumerable<CardioResult> Get(Exercise exercise)
         {
             return _results.Where(x => x.Exercise == exercise);
         }
 
-        public IEnumerable<Result> GetAll()
+        public IEnumerable<CardioResult> GetAll()
         {
             return _results;
         }
@@ -55,14 +55,12 @@ namespace Gym.Infrastructure.Repositories
             return _results.Exists(x => x.Id == id);
         }
 
-        public void Remove(Guid id)
+        public void Delete(CardioResult result)
         {
-            var result = Get(id);
-
             _results.Remove(result);
         }
 
-        public void Update(Result result)
+        public void Update(CardioResult result)
         {
 
         }

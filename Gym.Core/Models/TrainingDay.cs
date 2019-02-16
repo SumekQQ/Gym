@@ -19,6 +19,12 @@ namespace Gym.Core.Models
             Description = description;
         }
 
+        public void Update(TrainingPlan trainingPlan, string description)
+        {
+            setTrainingPlan(trainingPlan);
+            Description = description;
+        }
+
         private void setTrainingPlan(TrainingPlan trainingPlan)
         {
             if (trainingPlan == null)

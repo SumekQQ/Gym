@@ -3,7 +3,7 @@ using System;
 
 namespace Gym.Infrastructure.DTO
 {
-    public class ResultDTO
+    public class WeightResultDTO
     {
         public Guid Id { get; set; }
         public TrainingDay TrainingDay { get; set; }

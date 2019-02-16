@@ -20,8 +20,8 @@ namespace Gym.Core.Repositories
 
         void Add(TrainingPlan trainingDay);
 
-        void Remove(Guid id);
+        void Delete(TrainingPlan trainingPlan);
 
-        void Update(TrainingPlan trainingDay);
+        void Update(TrainingPlan trainingPlan);
     }
 }

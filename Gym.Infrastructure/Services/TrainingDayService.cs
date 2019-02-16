@@ -21,18 +21,6 @@ namespace Gym.Infrastructure.Services
             _mapper = mapper;
         }
 
-        public void CreateNew(TrainingPlanDTO trainingPlanDTO, string description)
-        {
-            var trainingPlan = _mapper.Map<TrainingPlanDTO, TrainingPlan>(trainingPlanDTO);
-
-            if (_trainingDayRepository.IsExist(trainingPlan) && _trainingDayRepository.IsExist(DateTime.UtcNow))
-                throw new Exception($"{ErrorsCodes.ItemExist}");
-
-            var newTrainingDay = new TrainingDay(trainingPlan, description);
-
-            _trainingDayRepository.Add(newTrainingDay);
-        }
-
         public TrainingDayDTO Get(DateTime date)
         {
             if (_trainingDayRepository.IsExist(date) == false)
@@ -58,6 +46,39 @@ namespace Gym.Infrastructure.Services
                 throw new Exception($"{ErrorsCodes.ItemNotFound}");
 
             return _mapper.Map<IEnumerable<TrainingDay>, IEnumerable<TrainingDayDTO>>(_trainingDayRepository.Get(trainingPlan));
+        }
+
+        public void CreateNew(TrainingPlanDTO trainingPlanDTO, string description)
+        {
+            var trainingPlan = _mapper.Map<TrainingPlanDTO, TrainingPlan>(trainingPlanDTO);
+
+            if (_trainingDayRepository.IsExist(trainingPlan) && _trainingDayRepository.IsExist(DateTime.UtcNow))
+                throw new Exception($"{ErrorsCodes.ItemExist}");
+
+            var newTrainingDay = new TrainingDay(trainingPlan, description);
+
+            _trainingDayRepository.Add(newTrainingDay);
+        }
+
+        public void Update(Guid id, TrainingPlanDTO trainingPlanDTO, string description)
+        {
+            var trainingDay = _mapper.Map<TrainingDayDTO, TrainingDay>(Get(id));
+
+            if (trainingDay == null)
+                throw new Exception($"Can not update training day, provided plan not exist.");
+
+            trainingDay.Update(_mapper.Map<TrainingPlanDTO, TrainingPlan>(trainingPlanDTO), description);
+            _trainingDayRepository.Update(trainingDay);
+        }
+
+        public void Delete(Guid id)
+        {
+            var trainingDay = _mapper.Map<TrainingDayDTO, TrainingDay>(Get(id));
+
+            if (trainingDay == null)
+                throw new Exception($"Can not delete training day, provided plan not exist.");
+
+            _trainingDayRepository.Delete(trainingDay);
         }
     }
 }

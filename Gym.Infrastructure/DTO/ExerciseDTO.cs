@@ -7,6 +7,7 @@ namespace Gym.Infrastructure.DTO
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public BodyPart BodyPart { get; set; }
+        public Category Category { get; set; }
+        public bool IsCustom { get; set; }
     }
 }

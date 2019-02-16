@@ -14,5 +14,9 @@ namespace Gym.Infrastructure.Services
         IEnumerable<TrainingDayDTO> Get(TrainingPlan trainingPlan);
 
         void CreateNew(TrainingPlanDTO trainingPlan, string description);
+
+        void Update(Guid id, TrainingPlanDTO trainingPlan, string description);
+
+        void Delete(Guid id);
     }
 }

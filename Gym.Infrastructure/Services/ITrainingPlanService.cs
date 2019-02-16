@@ -12,6 +12,10 @@ namespace Gym.Infrastructure.Services
 
         IEnumerable<TrainingPlanDTO> GetAll();
 
-        void CreateNew(string name, IEnumerable<ExerciseDTO> exercises);
+        void CreateNew(string name, IEnumerable<Guid> exercisesId);
+
+        void Update(Guid id, string name, IEnumerable<Guid> exercisesId);
+
+        void Delete(Guid id);
     }
 }
