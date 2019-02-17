@@ -8,19 +8,17 @@ using System.Collections.Generic;
 
 namespace Gym.Infrastructure.Services
 {
-    public class CardioResultService : ICardioResultService
+    public class CardioResultService : BaseService, ICardioResultService
     {
         private readonly ICardioResultRepository _resultRepository;
         private readonly ITrainingDayRepository _trainingDayRepository;
         private readonly IExerciseRepository _exerciseRepository;
-        private readonly IMapper _mapper;
 
-        public CardioResultService(ICardioResultRepository resultRepository, ITrainingDayRepository trainingDayRepository, IExerciseRepository exerciseRepository, IMapper mapper)
+        public CardioResultService(ICardioResultRepository resultRepository, ITrainingDayRepository trainingDayRepository, IExerciseRepository exerciseRepository, IMapper mapper) : base(mapper)
         {
             _resultRepository = resultRepository;
             _trainingDayRepository = trainingDayRepository;
             _exerciseRepository = exerciseRepository;
-            _mapper = mapper;
         }
 
         public CardioResultDTO Get(Guid id)

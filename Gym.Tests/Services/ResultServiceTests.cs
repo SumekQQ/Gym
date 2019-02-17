@@ -13,7 +13,7 @@ namespace Gym.Tests.Services
 {
     public class ResultServiceTests
     {
-        [Fact]
+  /*      [Fact]
         public void create_new_results()
         {
             resultService.CreateNew(trainingDay, exercise, 5, 3, 7);
@@ -62,6 +62,6 @@ namespace Gym.Tests.Services
             resultService = new ResultService(resultRepositorMock.Object, trainingDayRepositoryMock.Object, exerciseRepositoryMock.Object, mapperMock.Object);
         }
 
-        #endregion
+        #endregion*/
     }
 }

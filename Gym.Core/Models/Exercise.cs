@@ -8,7 +8,7 @@ namespace Gym.Core.Models
         public Guid Id { get; protected set; }
         public string Name { get; protected set; }
         public Category Category { get; protected set; }
-        public bool IsCustom { get; protected set; }
+        public bool IsDefault { get; protected set; }
 
         protected Exercise() { }
 
@@ -17,16 +17,19 @@ namespace Gym.Core.Models
             Id = Guid.NewGuid();
             setName(name);
             setCategory(category);
-            IsCustom = true;
+            IsDefault = false;
         }
 
         public void Update(string name, Category category)
         {
-            if (IsCustom)
+            if (IsDefault)
                 throw new Exception("Can not update default exercise");
 
             if (Category == Category.Cardio && category != Category.Cardio)
-                throw new Exception("Can not update exercise asigned to cardio category.");
+                throw new Exception("Can not update category exercise asigned to cardio category.");
+
+            if (Category != Category.Cardio && category == Category.Cardio)
+                throw new Exception("Can not update to cardio category exercise asigned to weight category.");
 
             setName(name);
             setCategory(Category);

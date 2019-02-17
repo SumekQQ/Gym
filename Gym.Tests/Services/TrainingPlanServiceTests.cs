@@ -13,7 +13,7 @@ namespace Gym.Tests.Services
 {
     public class TrainingPlanServiceTests
     {
-        [Fact]
+/*        [Fact]
         public void create_new_training_plan()
         {
             trainingService.CreateNew("NewPlan", FakeDataBase.GetInstance().Exercises);
@@ -70,6 +70,6 @@ namespace Gym.Tests.Services
             trainingService = new TrainingPlanService(trainingPlanRepositoryMock.Object, mapperMock.Object);
         }
 
-        #endregion
+        #endregion*/
     }
 }

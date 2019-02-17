@@ -8,36 +8,29 @@ using System.Collections.Generic;
 
 namespace Gym.Infrastructure.Services
 {
-    public class ExerciseService : IExerciseService
+    public class ExerciseService : BaseService, IExerciseService
     {
         private readonly IExerciseRepository _exerciseRepository;
-        private readonly IMapper _mapper;
 
-        public ExerciseService(IExerciseRepository exerciseRepository, IMapper mapper)
+        public ExerciseService(IExerciseRepository exerciseRepository, IMapper mapper) : base(mapper)
         {
             _exerciseRepository = exerciseRepository;
-            _mapper = mapper;
         }
 
         public ExerciseDTO Get(string name)
-        {
-            return _mapper.Map<Exercise, ExerciseDTO>(_exerciseRepository.Get(name));
-        }
+            => _mapper.Map<Exercise, ExerciseDTO>(Single(_exerciseRepository.Get(name)));
+
 
         public ExerciseDTO Get(Guid id)
-        {
-            return _mapper.Map<Exercise, ExerciseDTO>(_exerciseRepository.Get(id));
-        }
+            => _mapper.Map<Exercise, ExerciseDTO>(Single(_exerciseRepository.Get(id)));
+
 
         public IEnumerable<ExerciseDTO> Get(Category category)
-        {
-            return _mapper.Map<IEnumerable<Exercise>, IEnumerable<ExerciseDTO>>(_exerciseRepository.Get(category));
-        }
+            => _mapper.Map<IEnumerable<Exercise>, IEnumerable<ExerciseDTO>>(Collection(_exerciseRepository.Get(category)));
+
 
         public IEnumerable<ExerciseDTO> GetAll()
-        {
-            return _mapper.Map<IEnumerable<Exercise>, IEnumerable<ExerciseDTO>>(_exerciseRepository.GetAll());
-        }
+            => _mapper.Map<IEnumerable<Exercise>, IEnumerable<ExerciseDTO>>(Collection(_exerciseRepository.GetAll()));
 
         public void CreateNew(string name, Category category)
         {
@@ -51,10 +44,7 @@ namespace Gym.Infrastructure.Services
 
         public void Update(Guid id, string name, Category category)
         {
-            var exerciseToUpdate = _exerciseRepository.Get(id);
-
-            if (exerciseToUpdate == null)
-                throw new Exception($"Can not update exercise : {name}, provided exercise not exist.");
+            var exerciseToUpdate = Single(_exerciseRepository.Get(id));
 
             exerciseToUpdate.Update(name, category);
             _exerciseRepository.Update(exerciseToUpdate);
@@ -62,12 +52,9 @@ namespace Gym.Infrastructure.Services
 
         public void Delete(Guid id)
         {
-            var exerciseToDelete = _exerciseRepository.Get(id);
+            var exerciseToDelete = Single(_exerciseRepository.Get(id));
 
-            if (exerciseToDelete == null)
-                throw new Exception("Can not delete exercise, provided exercise not exist.");
-
-            if (exerciseToDelete.IsCustom)
+            if (exerciseToDelete.IsDefault)
                 throw new Exception("Can not delete default exercise.");
 
             _exerciseRepository.Delete(exerciseToDelete);

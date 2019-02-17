@@ -7,7 +7,7 @@ namespace Gym.Tests.Services
 {
     public abstract class ServiceTestsTemplate
     {
-        protected Mock<IResultRepository> resultRepositorMock;
+     //   protected Mock<IResultRepository> resultRepositorMock;
         protected Mock<ITrainingDayRepository> trainingDayRepositoryMock;
         protected Mock<IExerciseRepository> exerciseRepositoryMock;
         protected Mock<ITrainingPlanRepository> trainingPlanRepositoryMock;
@@ -15,7 +15,7 @@ namespace Gym.Tests.Services
 
         protected ServiceTestsTemplate()
         {
-            resultRepositorMock = new Mock<IResultRepository>();
+           // resultRepositorMock = new Mock<IResultRepository>();
             trainingDayRepositoryMock = new Mock<ITrainingDayRepository>();
             exerciseRepositoryMock = new Mock<IExerciseRepository>();
             trainingPlanRepositoryMock = new Mock<ITrainingPlanRepository>();

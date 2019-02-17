@@ -37,9 +37,11 @@ namespace Gym.Infrastructure.Repositories
             {
                 new Exercise("Bench press", Category.Chest),
                 new Exercise("Squad", Category.Legs),
+                new Exercise("Squad2", Category.Legs),
                 new Exercise("Planks", Category.Abs),
                 new Exercise("OHP", Category.Shoulders),
-                new Exercise("Deadth lift", Category.Back)
+                new Exercise("Deadth lift", Category.Back),
+                new Exercise("Cycling", Category.Cardio)
             };
         }
 
