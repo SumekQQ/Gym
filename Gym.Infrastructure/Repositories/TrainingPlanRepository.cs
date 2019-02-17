@@ -11,44 +11,28 @@ namespace Gym.Infrastructure.Repositories
         public List<TrainingPlan> _trainingPlans = FakeDataBase.GetInstance().TrainingPlans;
 
         public void Add(TrainingPlan trainingPlan)
-        {
-            _trainingPlans.Add(trainingPlan);
-        }
+            => _trainingPlans.Add(trainingPlan);
 
         public TrainingPlan Get(Guid id)
-        {
-            return _trainingPlans.Single(x => x.Id == id);
-        }
+            => _trainingPlans.Single(x => x.Id == id);
 
         public TrainingPlan Get(string name)
-        {
-            return _trainingPlans.Single(x => x.Name == name);
-        }
+            => _trainingPlans.Single(x => x.Name == name);
 
         public IEnumerable<TrainingPlan> GetAll()
-        {
-            return _trainingPlans;
-        }
+            => _trainingPlans;
 
         public bool IsExist(Guid id)
-        {
-            return _trainingPlans.Exists(x => x.Id == id);
-        }
+            => _trainingPlans.Exists(x => x.Id == id);
 
         public bool IsExist(string name)
-        {
-            return _trainingPlans.Exists(x => x.Name == name);
-        }
+            => _trainingPlans.Exists(x => x.Name == name);
 
         public bool IsExist(TrainingPlan trainingPlan)
-        {
-            return _trainingPlans.Exists(x => x == trainingPlan);
-        }
+            => _trainingPlans.Exists(x => x == trainingPlan);
 
         public void Delete(TrainingPlan trainingPlan)
-        {
-            _trainingPlans.Remove(trainingPlan);
-        }
+            => _trainingPlans.Remove(trainingPlan);
 
         public void Update(TrainingPlan trainingPlan)
         {

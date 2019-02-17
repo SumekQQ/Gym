@@ -13,7 +13,7 @@ using Xunit;
 
 namespace Gym.Tests.Services
 {
-    public class ExerciseServiceTests
+    public class ExerciseServiceTests : ServiceTestsTemplate
     {
         [Fact]
         public void add_new_exercise()
@@ -199,16 +199,12 @@ namespace Gym.Tests.Services
 
         #region ARRANGE
 
-        private Mock<IExerciseRepository> exerciseRepositoryMock;
-        private Mock<IMapper> mapperMock;
         private ExerciseService exerciseService;
         private Exercise ExampleExercise;
         private IEnumerable<Exercise> ExampleCollectionExercise;
 
-        public ExerciseServiceTests()
+        public ExerciseServiceTests() : base()
         {
-            exerciseRepositoryMock = new Mock<IExerciseRepository>();
-            mapperMock = new Mock<IMapper>();
             exerciseService = new ExerciseService(exerciseRepositoryMock.Object, mapperMock.Object);
             ExampleExercise = FakeDataBase.GetInstance().Exercises.First();
             ExampleCollectionExercise = FakeDataBase.GetInstance().Exercises;
