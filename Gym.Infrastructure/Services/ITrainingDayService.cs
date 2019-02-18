@@ -11,11 +11,11 @@ namespace Gym.Infrastructure.Services
 
         TrainingDayDTO Get(Guid id);
 
-        IEnumerable<TrainingDayDTO> Get(TrainingPlan trainingPlan);
+        IEnumerable<TrainingDayDTO> GetCollection(Guid trainingPlanId);
 
-        void CreateNew(TrainingPlanDTO trainingPlan, string description);
+        void CreateNew(Guid trainingPlanId, string description);
 
-        void Update(Guid id, TrainingPlanDTO trainingPlan, string description);
+        void Update(Guid id, Guid trainingPlanId, string description);
 
         void Delete(Guid id);
     }
