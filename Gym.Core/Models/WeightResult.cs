@@ -50,7 +50,7 @@ namespace Gym.Core.Models
 
         private void setReps(int reps)
         {
-            if (reps < 1 || reps > 30)
+            if (reps < 0 || reps > 30)
                 throw new Exception("Provided amount of reps is not correct.");
 
             if (Reps != reps)

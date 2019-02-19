@@ -11,7 +11,8 @@ namespace Gym.Core.Models
 
         public CardioResult(TrainingDay trainingDay, Exercise exercise, int distance, string time) : base(trainingDay, exercise)
         {
-            Update(distance, time);
+            setDistance(distance);
+            setTimeCardio(time);
         }
 
         public void Update(int distance, string time)
@@ -43,18 +44,18 @@ namespace Gym.Core.Models
             var singleTimeAsInt = new int[singleTime.Length];
             time = "";
 
-            if (singleTime.Length > 3)
+            if (singleTime.Length < 3)
                 throw new Exception("Training time should contain only hours, mins and seconds");
 
 
             for (int i = 0; i < singleTime.Length; i++)
             {
-                if (Int32.TryParse(singleTime[i], out singleTimeAsInt[i]))
+                if (Int32.TryParse(singleTime[i], out singleTimeAsInt[i]) == false)
                     throw new Exception($"Can not convert {singleTime[i]} to time value");
 
                 if (i != 0 && singleTimeAsInt[i] >= 60)
                 {
-                    singleTimeAsInt[i--] += singleTimeAsInt[i] / 60;
+                    singleTimeAsInt[i-1] += singleTimeAsInt[i] / 60;
                     singleTimeAsInt[i] %= 60;
                 }
 

@@ -8,49 +8,32 @@ using System.Collections.Generic;
 
 namespace Gym.Infrastructure.Services
 {
-    public class WeightResultService : IWeightResultService
+    public class WeightResultService : BaseService, IWeightResultService
     {
         private readonly IWeightResultRepository _resultRepository;
         private readonly ITrainingDayRepository _trainingDayRepository;
         private readonly IExerciseRepository _exerciseRepository;
-        private readonly IMapper _mapper;
 
-        public WeightResultService(IWeightResultRepository resultRepository, ITrainingDayRepository trainingDayRepository, IExerciseRepository exerciseRepository, IMapper mapper)
+        public WeightResultService(IWeightResultRepository resultRepository, ITrainingDayRepository trainingDayRepository, IExerciseRepository exerciseRepository, IMapper mapper) : base(mapper)
         {
             _resultRepository = resultRepository;
             _trainingDayRepository = trainingDayRepository;
             _exerciseRepository = exerciseRepository;
-            _mapper = mapper;
         }
 
         public WeightResultDTO Get(Guid id)
-        {
-            if (_resultRepository.IsExist(id) == false)
-                throw new Exception($"{ErrorsCodes.ItemNotFound}");
-
-            return _mapper.Map<WeightResult, WeightResultDTO>(_resultRepository.Get(id));
-        }
+            => _mapper.Map<WeightResult, WeightResultDTO>(Single(_resultRepository.Get(id)));
 
         public IEnumerable<WeightResultDTO> Get(TrainingDay trainingDay)
-        {
-            if (_resultRepository.IsExist(trainingDay) == false)
-                throw new Exception($"{ErrorsCodes.ItemNotFound}");
-
-            return _mapper.Map<IEnumerable<WeightResult>, IEnumerable<WeightResultDTO>>(_resultRepository.Get(trainingDay));
-        }
+            => _mapper.Map<IEnumerable<WeightResult>, IEnumerable<WeightResultDTO>>(Collection(_resultRepository.Get(trainingDay)));
 
         public IEnumerable<WeightResultDTO> Get(Exercise exercise)
-        {
-            if (_resultRepository.IsExist(exercise) == false)
-                throw new Exception($"{ErrorsCodes.ItemNotFound}");
+            => _mapper.Map<IEnumerable<WeightResult>, IEnumerable<WeightResultDTO>>(Collection(_resultRepository.Get(exercise)));
 
-            return _mapper.Map<IEnumerable<WeightResult>, IEnumerable<WeightResultDTO>>(_resultRepository.Get(exercise));
-        }
-
-        public void CreateNew(TrainingDayDTO trainingDayDTO, ExerciseDTO exerciseDTO, int series, float weight, int reps)
+        public void CreateNew(Guid trainingDayId, Guid exerciseId, int series, float weight, int reps)
         {
-            var exercise = _mapper.Map<ExerciseDTO, Exercise>(exerciseDTO);
-            var trainingDay = _mapper.Map<TrainingDayDTO, TrainingDay>(trainingDayDTO);
+            var exercise = Single(_exerciseRepository.Get(exerciseId));
+            var trainingDay = Single(_trainingDayRepository.Get(trainingDayId));
 
             if (_resultRepository.IsExist(trainingDay, exercise))
                 throw new Exception($"{ErrorsCodes.ItemExist}");
@@ -60,19 +43,17 @@ namespace Gym.Infrastructure.Services
             _resultRepository.Add(newWeightResult);
         }
 
-        public void Update(WeightResultDTO existResultDTO, int series, float weight, int reps)
+        public void Update(Guid id, int series, float weight, int reps)
         {
-            var existResult = _mapper.Map<WeightResultDTO, WeightResult>(existResultDTO);
+            var existResult = Single(_resultRepository.Get(id));
+
             existResult.Update(series, weight, reps);
             _resultRepository.Update(existResult);
         }
 
         public void Delete(Guid id)
         {
-            var existResult = _resultRepository.Get(id);
-
-            if (existResult == null)
-                throw new Exception("Can not delete, provided result not exist");
+            var existResult = Single(_resultRepository.Get(id));
 
             _resultRepository.Delete(existResult);
         }

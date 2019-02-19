@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
 using Gym.Core.Repositories;
-using Gym.Infrastructure.Repositories;
 using Moq;
 
 namespace Gym.Tests.Services
 {
     public abstract class ServiceTestsTemplate
     {
-     //   protected Mock<IResultRepository> resultRepositorMock;
+        protected Mock<ICardioResultRepository> cardioResultRepositoryMock;
+        protected Mock<IWeightResultRepository> weightResultRepositoryMock;
         protected Mock<ITrainingDayRepository> trainingDayRepositoryMock;
         protected Mock<IExerciseRepository> exerciseRepositoryMock;
         protected Mock<ITrainingPlanRepository> trainingPlanRepositoryMock;
@@ -15,7 +15,8 @@ namespace Gym.Tests.Services
 
         protected ServiceTestsTemplate()
         {
-           // resultRepositorMock = new Mock<IResultRepository>();
+            cardioResultRepositoryMock = new Mock<ICardioResultRepository>();
+            weightResultRepositoryMock = new Mock<IWeightResultRepository>();
             trainingDayRepositoryMock = new Mock<ITrainingDayRepository>();
             exerciseRepositoryMock = new Mock<IExerciseRepository>();
             trainingPlanRepositoryMock = new Mock<ITrainingPlanRepository>();

@@ -65,20 +65,28 @@ namespace Gym.Infrastructure.Repositories
 
         private List<WeightResult> createWeightResultsList()
         {
-            return new List<WeightResult>();
-            /*  {
-                  new WeightResult(TrainingDay.First(), Exercises.First(), 3, 5f, 8),
-                    new WeightResult(TrainingDay.First(), Exercises.Last(), 4, 5.5f, 9),
-                    new WeightResult(TrainingDay.First(), Exercises.Skip(3).First(), 7, 10.5f, 10),
-                    new WeightResult(TrainingDay.Last(), Exercises.First(), 3, 5f, 8),
-                    new WeightResult(TrainingDay.Last(), Exercises.Last(), 4, 5.5f, 9),
-                    new WeightResult(TrainingDay.Last(), Exercises.Skip(3).First(), 7, 10.5f, 10),
-              };*/
+            var weightExercise = Exercises.Where(x => x.Category != Category.Cardio);
+
+            return new List<WeightResult>()
+            {
+                new WeightResult(TrainingDay.First(), weightExercise.First(), 3, 5f, 8),
+                new WeightResult(TrainingDay.First(), weightExercise.Last(), 4, 5.5f, 9),
+                new WeightResult(TrainingDay.First(), weightExercise.Skip(3).First(), 7, 10.5f, 10),
+                new WeightResult(TrainingDay.Last(), weightExercise.First(), 3, 5f, 8),
+                new WeightResult(TrainingDay.Last(), weightExercise.Last(), 4, 5.5f, 9),
+                new WeightResult(TrainingDay.Last(), weightExercise.Skip(3).First(), 7, 10.5f, 10),
+            };
         }
 
         private List<CardioResult> createCardioResultsList()
         {
-            return new List<CardioResult>();
+            var cardioExercise = Exercises.First(x => x.Category == Category.Cardio);
+
+            return new List<CardioResult>()
+            {
+                new CardioResult(TrainingDay.First(), cardioExercise, 3, "12:12:12"),
+                new CardioResult(TrainingDay.First(), cardioExercise, 4, "13:14:15"),
+            };
         }
     }
 }

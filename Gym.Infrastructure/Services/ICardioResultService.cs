@@ -13,9 +13,9 @@ namespace Gym.Infrastructure.Services
 
         IEnumerable<CardioResultDTO> Get(Exercise exercise);
 
-        void CreateNew(TrainingDayDTO trainingDay, ExerciseDTO exercise, int distance, string time);
+        void CreateNew(Guid trainingDayId, Guid exerciseId, int distance, string time);
 
-        void Update(CardioResultDTO cardioResultDTO, int distance, string time);
+        void Update(Guid Id, int distance, string time);
 
         void Delete(Guid id);
     }

@@ -33,7 +33,7 @@ namespace Gym.Api.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreateNew([FromBody] CreateResult command)
+        public ActionResult CreateNew([FromBody] CreateWeightResult command)
         {
             Dispatch(command);
 

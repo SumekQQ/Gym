@@ -13,9 +13,9 @@ namespace Gym.Infrastructure.Services
 
         IEnumerable<WeightResultDTO> Get(Exercise exercise);
 
-        void CreateNew(TrainingDayDTO trainingDay, ExerciseDTO exercise, int series, float weight, int reps);
+        void CreateNew(Guid trainingDayId, Guid exerciseId, int series, float weight, int reps);
 
-        void Update(WeightResultDTO weightResultDTO, int series, float weight, int reps);
+        void Update(Guid id, int series, float weight, int reps);
 
         void Delete(Guid id);
     }

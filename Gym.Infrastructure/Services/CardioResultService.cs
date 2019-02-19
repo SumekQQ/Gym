@@ -22,33 +22,18 @@ namespace Gym.Infrastructure.Services
         }
 
         public CardioResultDTO Get(Guid id)
-        {
-            if (_resultRepository.IsExist(id) == false)
-                throw new Exception($"{ErrorsCodes.ItemNotFound}");
-
-            return _mapper.Map<CardioResult, CardioResultDTO>(_resultRepository.Get(id));
-        }
+            => _mapper.Map<CardioResult, CardioResultDTO>(Single(_resultRepository.Get(id)));
 
         public IEnumerable<CardioResultDTO> Get(TrainingDay trainingDay)
-        {
-            if (_resultRepository.IsExist(trainingDay) == false)
-                throw new Exception($"{ErrorsCodes.ItemNotFound}");
-
-            return _mapper.Map<IEnumerable<CardioResult>, IEnumerable<CardioResultDTO>>(_resultRepository.Get(trainingDay));
-        }
+            => _mapper.Map<IEnumerable<CardioResult>, IEnumerable<CardioResultDTO>>(Collection(_resultRepository.Get(trainingDay)));
 
         public IEnumerable<CardioResultDTO> Get(Exercise exercise)
-        {
-            if (_resultRepository.IsExist(exercise) == false)
-                throw new Exception($"{ErrorsCodes.ItemNotFound}");
+            => _mapper.Map<IEnumerable<CardioResult>, IEnumerable<CardioResultDTO>>(Collection(_resultRepository.Get(exercise)));
 
-            return _mapper.Map<IEnumerable<CardioResult>, IEnumerable<CardioResultDTO>>(_resultRepository.Get(exercise));
-        }
-
-        public void CreateNew(TrainingDayDTO trainingDayDTO, ExerciseDTO exerciseDTO, int distance, string time)
+        public void CreateNew(Guid trainingDayId, Guid exerciseId, int distance, string time)
         {
-            var exercise = _mapper.Map<ExerciseDTO, Exercise>(exerciseDTO);
-            var trainingDay = _mapper.Map<TrainingDayDTO, TrainingDay>(trainingDayDTO);
+            var exercise = Single(_exerciseRepository.Get(exerciseId));
+            var trainingDay = Single(_trainingDayRepository.Get(trainingDayId));
 
             if (_resultRepository.IsExist(trainingDay, exercise))
                 throw new Exception($"{ErrorsCodes.ItemExist}");
@@ -58,19 +43,17 @@ namespace Gym.Infrastructure.Services
             _resultRepository.Add(newCardioResult);
         }
 
-        public void Update(CardioResultDTO cardioResultDTO, int distance, string time)
+        public void Update(Guid id, int distance, string time)
         {
-            var existResult = _mapper.Map<CardioResultDTO, CardioResult>(cardioResultDTO);
+            var existResult = Single(_resultRepository.Get(id));
+
             existResult.Update(distance, time);
             _resultRepository.Update(existResult);
         }
 
         public void Delete(Guid id)
         {
-            var existResult = _resultRepository.Get(id);
-
-            if (existResult == null)
-                throw new Exception("Can not delte, provided result not exist");
+            var existResult = Single(_resultRepository.Get(id));
 
             _resultRepository.Delete(existResult);
         }
