@@ -1,8 +1,10 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Gym.Infrastructure.EF;
 using Gym.Infrastructure.IoC;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -29,6 +31,9 @@ namespace Gym.Api
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            var connection = @"Server=(localdb)\mssqllocaldb;Database=GymDatabase;Trusted_Connection=True;";
+            services.AddDbContext<GymContext>(option => option.UseSqlServer(connection));
+            services.AddCors();
 
             var builder = new ContainerBuilder();
             builder.Populate(services);
@@ -51,6 +56,10 @@ namespace Gym.Api
             }
 
             app.UseHttpsRedirection();
+            app.UseCors(options => 
+                options.WithOrigins("http://localhost:4200")
+                .AllowAnyMethod()
+                .AllowAnyHeader());
             app.UseMvc();
         }
     }
