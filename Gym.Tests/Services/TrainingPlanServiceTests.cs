@@ -185,7 +185,7 @@ namespace Gym.Tests.Services
         {
             trainingPlanRepositoryMock = new Mock<ITrainingPlanRepository>();
             mapperMock = new Mock<IMapper>();
-            trainingService = new TrainingPlanService(trainingPlanRepositoryMock.Object, exerciseRepositoryMock.Object, mapperMock.Object);
+            trainingService = new TrainingPlanService(trainingPlanRepositoryMock.Object, exerciseRepositoryMock.Object,trainingPlanExerciseRepository.Object, mapperMock.Object);
             ExampleGuidsExercise = new List<Guid>();
             FakeDataBase.GetInstance().Exercises.ForEach(x => ExampleGuidsExercise.Add(x.Id));
             ExampleTrainingPlan = FakeDataBase.GetInstance().TrainingPlans.First();

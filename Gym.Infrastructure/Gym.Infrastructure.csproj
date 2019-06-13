@@ -5,14 +5,30 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20190611213237_AddedPlanTabl.cs" />
+    <Compile Remove="Migrations\20190611213237_AddedPlanTabl.Designer.cs" />
+    <Compile Remove="Migrations\20190612172220_AddMany.cs" />
+    <Compile Remove="Migrations\20190612172220_AddMany.Designer.cs" />
+    <Compile Remove="Migrations\20190612173649_AddMan.cs" />
+    <Compile Remove="Migrations\20190612173649_AddMan.Designer.cs" />
+    <Compile Remove="Migrations\20190612174148_AddMan.cs" />
+    <Compile Remove="Migrations\20190612174148_AddMan.Designer.cs" />
+    <Compile Remove="Migrations\20190613154816_AddMane.cs" />
+    <Compile Remove="Migrations\20190613154816_AddMane.Designer.cs" />
+    <Compile Remove="Migrations\20190613184129_a.cs" />
+    <Compile Remove="Migrations\20190613184129_a.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Gym.Core\Gym.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Autofac" Version="4.9.0" />
     <PackageReference Include="AutoMapper" Version="8.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="2.1.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="2.1.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.1.11" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.1.1" />
   </ItemGroup>
 

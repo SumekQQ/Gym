@@ -8,8 +8,6 @@ namespace Gym.Infrastructure.Services
     {
         TrainingPlanDTO Get(Guid id);
 
-        TrainingPlanDTO Get(string name);
-
         IEnumerable<TrainingPlanDTO> GetAll();
 
         void CreateNew(string name, IEnumerable<Guid> exercisesId);

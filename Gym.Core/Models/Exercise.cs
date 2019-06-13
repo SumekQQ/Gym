@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace Gym.Core.Models
@@ -9,7 +10,6 @@ namespace Gym.Core.Models
         public string Name { get; protected set; }
         public Category Category { get; protected set; }
         public bool IsDefault { get; protected set; }
-
         protected Exercise() { }
 
         public Exercise(string name, Category category)

@@ -1,4 +1,5 @@
 ﻿using Gym.Infrastructure.Commands;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +8,7 @@ namespace Gym.Api.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    //[Authorize]
     public abstract class BaseController : Controller
     {
         private readonly ICommandDispatcher _commandDispatcher;

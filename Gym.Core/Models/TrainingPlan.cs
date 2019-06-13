@@ -9,7 +9,7 @@ namespace Gym.Core.Models
     {
         public Guid Id { get; protected set; }
         public string Name { get; protected set; }
-        public IEnumerable<Exercise> Exercises { get; protected set; }
+        public List<TrainingPlanExercise> ExerciseIds { get; protected set; }
 
         protected TrainingPlan() { }
 
@@ -35,16 +35,17 @@ namespace Gym.Core.Models
             if (name != Name)
                 Name = name;
         }
-        
+
         private void setExerciseList(IEnumerable<Exercise> exercises)
         {
             if (exercises == null || exercises.Count() < 1)
                 throw new Exception("Provided exercises list cannot be empty");
 
-            exercises = exercises.OrderBy(x => x.Category);
+            var trainingPlanExercises = new List<TrainingPlanExercise>();
+            foreach (var exercise in exercises)
+                trainingPlanExercises.Add(new TrainingPlanExercise(this, exercise));
 
-            if (Exercises != exercises)
-                Exercises = exercises;
+            ExerciseIds = trainingPlanExercises;
         }
     }
 }

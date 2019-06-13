@@ -22,16 +22,10 @@ namespace Gym.Api.Controllers
             return Collection(_trainingPlanService.GetAll());
         }
 
-        [HttpGet]
+        [HttpGet("{id}")]
         public ActionResult Get(Guid id)
         {
             return Single(_trainingPlanService.Get(id));
-        }
-
-        [HttpGet]
-        public ActionResult Get(string name)
-        {
-            return Single(_trainingPlanService.Get(name));
         }
 
         [HttpPost]

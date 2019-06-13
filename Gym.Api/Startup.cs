@@ -2,6 +2,7 @@
 using Autofac.Extensions.DependencyInjection;
 using Gym.Infrastructure.EF;
 using Gym.Infrastructure.IoC;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -30,10 +31,18 @@ namespace Gym.Api
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            services.AddMvc().AddJsonOptions(
+            options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+        );
             var connection = @"Server=(localdb)\mssqllocaldb;Database=GymDatabase;Trusted_Connection=True;";
             services.AddDbContext<GymContext>(option => option.UseSqlServer(connection));
             services.AddCors();
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.Authority = "https://dev-278878.okta.com/oauth2/default";
+                    options.Audience = "api://default";
+                });
 
             var builder = new ContainerBuilder();
             builder.Populate(services);
@@ -59,7 +68,9 @@ namespace Gym.Api
             app.UseCors(options => 
                 options.WithOrigins("http://localhost:4200")
                 .AllowAnyMethod()
-                .AllowAnyHeader());
+                .AllowAnyHeader()
+                .AllowCredentials());
+            app.UseAuthentication();
             app.UseMvc();
         }
     }

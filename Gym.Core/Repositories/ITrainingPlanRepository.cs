@@ -8,8 +8,6 @@ namespace Gym.Core.Repositories
     {
         TrainingPlan Get(Guid id);
 
-        TrainingPlan Get(string name);
-
         IEnumerable<TrainingPlan> GetAll();
 
         bool IsExist(Guid id);

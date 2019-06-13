@@ -1,4 +1,5 @@
-﻿using Gym.Infrastructure.Commands;
+﻿using Gym.Core.Models;
+using Gym.Infrastructure.Commands;
 using Gym.Infrastructure.Commands.Exercise;
 using Gym.Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +20,7 @@ namespace Gym.Api.Controllers
         [HttpGet]
         public ActionResult Get()
         {
-            return Single(_exerciseService.GetAll());
+            return Collection(_exerciseService.GetAll());
         }
 
         [HttpGet("{id}")]
@@ -28,10 +29,10 @@ namespace Gym.Api.Controllers
             return Single(_exerciseService.Get(id));
         }
 
-        [HttpGet("{name}")]
-        public ActionResult Get(string name)
+        [HttpGet("{category}")]
+        public ActionResult Get(Category category)
         {
-            return Single(_exerciseService.Get(name));
+            return Single(_exerciseService.Get(category));
         }
 
         [HttpPost]
@@ -50,7 +51,7 @@ namespace Gym.Api.Controllers
             return Created($"get/{command.Name}", null);
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public ActionResult Delete(Guid id)
         {
             _exerciseService.Delete(id);
