@@ -15,7 +15,7 @@ namespace Gym.Infrastructure.Handlers.TrainingPlan
 
         public void Handle(UpdateTrainingPlan command)
         {
-            _trainingPlanService.Update(command.Id, command.Name, command.ExercisesId);
+            _trainingPlanService.Update(command.Id, command.Name, command.ExerciseIds);
         }
     }
 }

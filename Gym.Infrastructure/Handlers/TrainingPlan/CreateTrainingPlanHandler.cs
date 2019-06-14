@@ -17,7 +17,7 @@ namespace Gym.Infrastructure.Handlers.TrainingPlan
 
         public void Handle(CreateTrainingPlan command)
         {
-            _trainingPlanService.CreateNew(command.Name, command.ExercisesId);
+            _trainingPlanService.CreateNew(command.Name, command.ExerciseIds);
         }
     }
 }

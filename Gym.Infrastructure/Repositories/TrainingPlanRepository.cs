@@ -18,15 +18,18 @@ namespace Gym.Infrastructure.Repositories
         }
 
         public void Add(TrainingPlan trainingPlan)
-            => _context.TrainingPlans.Add(trainingPlan);
+        {
+            _context.TrainingPlans.Add(trainingPlan);
+            _context.SaveChanges();
+        }
 
         public TrainingPlan Get(Guid id)
         {
-            return _context.TrainingPlans.Include(x => x.ExerciseIds).ThenInclude(x=>x.Exercise).Single(x => x.Id == id);
+            return _context.TrainingPlans.Include(x => x.ExerciseIds).ThenInclude(x => x.Exercise).Single(x => x.Id == id);
         }
 
         public IEnumerable<TrainingPlan> GetAll()
-           => _context.TrainingPlans.Include(x => x.ExerciseIds).ThenInclude(x=>x.Exercise);
+           => _context.TrainingPlans.Include(x => x.ExerciseIds).ThenInclude(x => x.Exercise);
 
         public bool IsExist(Guid id)
             => _context.TrainingPlans.Any(x => x.Id == id);
@@ -38,12 +41,15 @@ namespace Gym.Infrastructure.Repositories
             => _context.TrainingPlans.Any(x => x == trainingPlan);
 
         public void Delete(TrainingPlan trainingPlan)
-
-            => _context.TrainingPlans.Remove(trainingPlan);
+        {
+            _context.TrainingPlans.Remove(trainingPlan);
+            _context.SaveChanges();
+        }
 
         public void Update(TrainingPlan trainingPlan)
         {
-            //DoTo
+            _context.TrainingPlans.Update(trainingPlan);
+            _context.SaveChanges();
         }
     }
 }

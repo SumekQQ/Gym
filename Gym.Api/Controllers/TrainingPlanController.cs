@@ -44,7 +44,7 @@ namespace Gym.Api.Controllers
             return Ok();
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public ActionResult Delete(Guid id)
         {
             _trainingPlanService.Delete(id);

@@ -7,6 +7,6 @@ namespace Gym.Infrastructure.Commands.TrainingPlan
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public List<Guid> ExercisesId { get; set; }
+        public List<Guid> ExerciseIds { get; set; }
     }
 }

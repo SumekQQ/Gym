@@ -11,7 +11,6 @@ namespace Gym.Tests.Services
         protected Mock<ITrainingDayRepository> trainingDayRepositoryMock;
         protected Mock<IExerciseRepository> exerciseRepositoryMock;
         protected Mock<ITrainingPlanRepository> trainingPlanRepositoryMock;
-        protected Mock<ITrainingPlanExerciseRepository> trainingPlanExerciseRepository;
         protected Mock<IMapper> mapperMock;
 
         protected ServiceTestsTemplate()
@@ -21,7 +20,6 @@ namespace Gym.Tests.Services
             trainingDayRepositoryMock = new Mock<ITrainingDayRepository>();
             exerciseRepositoryMock = new Mock<IExerciseRepository>();
             trainingPlanRepositoryMock = new Mock<ITrainingPlanRepository>();
-            trainingPlanExerciseRepository = new Mock<ITrainingPlanExerciseRepository>();
             mapperMock = new Mock<IMapper>();
         }
     }

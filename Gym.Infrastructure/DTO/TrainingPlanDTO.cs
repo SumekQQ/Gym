@@ -8,6 +8,6 @@ namespace Gym.Infrastructure.DTO
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public List<TrainingPlanExercise> ExerciseIds { get; set; }
+        public List<Guid> ExerciseIds { get; set; }
     }
 }

@@ -13,13 +13,11 @@ namespace Gym.Infrastructure.Services
     {
         private readonly ITrainingPlanRepository _trainingPlanRepository;
         private readonly IExerciseRepository _exerciseRepository;
-        private readonly ITrainingPlanExerciseRepository _trainingPlanExerciseRepository;
 
-        public TrainingPlanService(ITrainingPlanRepository trainingPlanRepository, IExerciseRepository exerciseRepository, ITrainingPlanExerciseRepository trainingPlanExerciseRepository, IMapper mapper) : base(mapper)
+        public TrainingPlanService(ITrainingPlanRepository trainingPlanRepository, IExerciseRepository exerciseRepository, IMapper mapper) : base(mapper)
         {
             _trainingPlanRepository = trainingPlanRepository;
             _exerciseRepository = exerciseRepository;
-            _trainingPlanExerciseRepository = trainingPlanExerciseRepository;
         }
 
         public TrainingPlanDTO Get(Guid id)
@@ -29,7 +27,7 @@ namespace Gym.Infrastructure.Services
 
         public IEnumerable<TrainingPlanDTO> GetAll()
         {
-            return  _mapper.Map<IEnumerable<TrainingPlan>, IEnumerable<TrainingPlanDTO>>(Collection(_trainingPlanRepository.GetAll()));
+            return _mapper.Map<IEnumerable<TrainingPlan>, IEnumerable<TrainingPlanDTO>>(Collection(_trainingPlanRepository.GetAll()));
         }
 
         public void CreateNew(string name, IEnumerable<Guid> exercisesId)
@@ -41,20 +39,19 @@ namespace Gym.Infrastructure.Services
             var newTrainingPlan = new TrainingPlan(name, exercisesList);
 
             _trainingPlanRepository.Add(newTrainingPlan);
-        //    _trainingPlanExerciseRepository.Add(newTrainingPlan.Exercises);
         }
 
         public void Update(Guid id, string name, IEnumerable<Guid> exercisesId)
         {
             var trainingPlanToUpdate = Single(_trainingPlanRepository.Get(id));
             var exercisesList = Collection(getExercisesList(exercisesId)).ToList();
-         //   var trainingPlanExerciseToDelete = trainingPlanToUpdate.Exercises.Where(x => exercisesList.Contains(x.Exercise) == false).ToList();
-         //   var trainingPlanExerciseToAdd = exercisesList.Where(x => trainingPlanToUpdate.Exercises.SingleOrDefault(y => y.Exercise == x) == null).ToList();
+            //   var trainingPlanExerciseToDelete = trainingPlanToUpdate.Exercises.Where(x => exercisesList.Contains(x.Exercise) == false).ToList();
+            //   var trainingPlanExerciseToAdd = exercisesList.Where(x => trainingPlanToUpdate.Exercises.SingleOrDefault(y => y.Exercise == x) == null).ToList();
 
             trainingPlanToUpdate.Update(name, exercisesList);
             _trainingPlanRepository.Update(trainingPlanToUpdate);
-        //    _trainingPlanExerciseRepository.Add(trainingPlanToUpdate.Exercises.Where(x=> trainingPlanExerciseToAdd.Contains(x.Exercise)).ToList());
-        //    _trainingPlanExerciseRepository.Delete(trainingPlanExerciseToDelete);
+            //    _trainingPlanExerciseRepository.Add(trainingPlanToUpdate.Exercises.Where(x=> trainingPlanExerciseToAdd.Contains(x.Exercise)).ToList());
+            //    _trainingPlanExerciseRepository.Delete(trainingPlanExerciseToDelete);
         }
 
         public void Delete(Guid id)
