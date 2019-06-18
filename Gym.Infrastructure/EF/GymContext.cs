@@ -9,7 +9,7 @@ namespace Gym.Infrastructure.EF
 
         public DbSet<Exercise> Exercises { get; set; }
         public DbSet<TrainingPlan> TrainingPlans { get; set; }
-        public DbSet<TrainingPlanExercise> TrainingPlanExercises { get; set; }
+        public DbSet<TrainingDay> TrainingDays { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

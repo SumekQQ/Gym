@@ -45,13 +45,9 @@ namespace Gym.Infrastructure.Services
         {
             var trainingPlanToUpdate = Single(_trainingPlanRepository.Get(id));
             var exercisesList = Collection(getExercisesList(exercisesId)).ToList();
-            //   var trainingPlanExerciseToDelete = trainingPlanToUpdate.Exercises.Where(x => exercisesList.Contains(x.Exercise) == false).ToList();
-            //   var trainingPlanExerciseToAdd = exercisesList.Where(x => trainingPlanToUpdate.Exercises.SingleOrDefault(y => y.Exercise == x) == null).ToList();
 
             trainingPlanToUpdate.Update(name, exercisesList);
             _trainingPlanRepository.Update(trainingPlanToUpdate);
-            //    _trainingPlanExerciseRepository.Add(trainingPlanToUpdate.Exercises.Where(x=> trainingPlanExerciseToAdd.Contains(x.Exercise)).ToList());
-            //    _trainingPlanExerciseRepository.Delete(trainingPlanExerciseToDelete);
         }
 
         public void Delete(Guid id)
