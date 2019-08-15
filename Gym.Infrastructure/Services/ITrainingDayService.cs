@@ -13,7 +13,9 @@ namespace Gym.Infrastructure.Services
 
         IEnumerable<TrainingDayDTO> GetCollection(Guid trainingPlanId);
 
-        void CreateNew(Guid trainingPlanId, string description);
+        IEnumerable<TrainingDayDTO> GetAll();
+
+        void CreateNew(Guid trainingPlanId, string description, string date);
 
         void Update(Guid id, Guid trainingPlanId, string description);
 

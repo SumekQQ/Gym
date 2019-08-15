@@ -19,7 +19,7 @@ namespace Gym.Tests.Services
             trainingDayRepositoryMock.Setup(x => x.IsExist(It.IsAny<TrainingPlan>())).Returns(false);
             trainingDayRepositoryMock.Setup(x => x.IsExist(It.IsAny<DateTime>())).Returns(false);
 
-            trainingDayService.CreateNew(ExampleTrainingPlan.Id, "description");
+            trainingDayService.CreateNew(ExampleTrainingPlan.Id, "description", DateTime.Now.ToString());
 
             trainingDayRepositoryMock.Verify(x => x.Add(It.IsAny<TrainingDay>()), Times.Once);
         }
@@ -31,7 +31,7 @@ namespace Gym.Tests.Services
             trainingDayRepositoryMock.Setup(x => x.IsExist(It.IsAny<TrainingPlan>())).Returns(false);
             trainingDayRepositoryMock.Setup(x => x.IsExist(It.IsAny<DateTime>())).Returns(false);
 
-            Exception ex = Assert.Throws<Exception>(() => trainingDayService.CreateNew(ExampleTrainingPlan.Id, "description"));
+            Exception ex = Assert.Throws<Exception>(() => trainingDayService.CreateNew(ExampleTrainingPlan.Id, "description", DateTime.Now.ToString()));
 
             Assert.Equal("Finding data not exist or return null value", ex.Message);
             trainingDayRepositoryMock.Verify(x => x.Add(It.IsAny<TrainingDay>()), Times.Never);
@@ -44,7 +44,7 @@ namespace Gym.Tests.Services
             trainingDayRepositoryMock.Setup(x => x.IsExist(It.IsAny<TrainingPlan>())).Returns(true);
             trainingDayRepositoryMock.Setup(x => x.IsExist(It.IsAny<DateTime>())).Returns(true);
 
-            Exception ex = Assert.Throws<Exception>(() => trainingDayService.CreateNew(ExampleTrainingPlan.Id, "description"));
+            Exception ex = Assert.Throws<Exception>(() => trainingDayService.CreateNew(ExampleTrainingPlan.Id, "description", DateTime.Now.ToString()));
 
             Assert.Equal($"{ErrorsCodes.ItemExist}", ex.Message);
             trainingDayRepositoryMock.Verify(x => x.Add(It.IsAny<TrainingDay>()), Times.Never);

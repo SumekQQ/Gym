@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -17,6 +17,8 @@
     <Compile Remove="Migrations\20190613154816_AddMane.Designer.cs" />
     <Compile Remove="Migrations\20190613184129_a.cs" />
     <Compile Remove="Migrations\20190613184129_a.Designer.cs" />
+    <Compile Remove="Migrations\20190621202248_addTrainingDayTabels.cs" />
+    <Compile Remove="Migrations\20190621202248_addTrainingDayTabels.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

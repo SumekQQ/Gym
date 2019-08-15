@@ -61,7 +61,7 @@ namespace Gym.Api
             }
             else
             {
-                app.UseExceptionHandler();
+                app.UseExceptionHandler("/Error");
             }
 
             app.UseHttpsRedirection();

@@ -9,13 +9,9 @@ namespace Gym.Infrastructure.Services
 {
     public interface IExerciseService : IService
     {
-        ExerciseDTO Get(string name);
+        IEnumerable<ExerciseDTO> GetAll();
 
         ExerciseDTO Get(Guid id);
-
-        IEnumerable<ExerciseDTO> Get(Category category);
-
-        IEnumerable<ExerciseDTO> GetAll();
 
         void CreateNew(string name, Category category);
 

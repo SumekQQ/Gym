@@ -8,19 +8,22 @@ using System.Collections.Generic;
 
 namespace Gym.Infrastructure.Services
 {
-    public class TrainingDayService : BaseService ,ITrainingDayService
+    public class TrainingDayService : BaseService, ITrainingDayService
     {
         private readonly ITrainingDayRepository _trainingDayRepository;
         private readonly ITrainingPlanRepository _trainingPlanRepository;
 
-        public TrainingDayService(ITrainingDayRepository trainingDayRepository, ITrainingPlanRepository trainingPlanRepository, IMapper mapper):base(mapper)
+        public TrainingDayService(ITrainingDayRepository trainingDayRepository, ITrainingPlanRepository trainingPlanRepository, IMapper mapper) : base(mapper)
         {
             _trainingDayRepository = trainingDayRepository;
             _trainingPlanRepository = trainingPlanRepository;
         }
 
+        public IEnumerable<TrainingDayDTO> GetAll()
+            => _mapper.Map<IEnumerable<TrainingDay>, IEnumerable<TrainingDayDTO>>(Collection(_trainingDayRepository.GetAll()));
+        
         public TrainingDayDTO Get(DateTime date)
-            => _mapper.Map<TrainingDay, TrainingDayDTO>(Single(_trainingDayRepository.Get(date)));        
+            => _mapper.Map<TrainingDay, TrainingDayDTO>(Single(_trainingDayRepository.Get(date)));
 
         public TrainingDayDTO Get(Guid id)
             => _mapper.Map<TrainingDay, TrainingDayDTO>(Single(_trainingDayRepository.Get(id)));
@@ -33,14 +36,15 @@ namespace Gym.Infrastructure.Services
             return _mapper.Map<IEnumerable<TrainingDay>, IEnumerable<TrainingDayDTO>>(Collection(_trainingDayRepository.Get(trainingPlan)));
         }
 
-        public void CreateNew(Guid trainingPlanId, string description)
+        public void CreateNew(Guid trainingPlanId, string description, string date)
         {
             var trainingPlan = Single(_trainingPlanRepository.Get(trainingPlanId));
+            var dateTime = DateTime.Parse(date);
 
-            if (_trainingDayRepository.IsExist(trainingPlan) && _trainingDayRepository.IsExist(DateTime.UtcNow))
+            if (_trainingDayRepository.IsExist(trainingPlan) && _trainingDayRepository.IsExist(dateTime))
                 throw new Exception($"{ErrorsCodes.ItemExist}");
 
-            var newTrainingDay = new TrainingDay(trainingPlan, description);
+            var newTrainingDay = new TrainingDay(trainingPlan, description, dateTime);
 
             _trainingDayRepository.Add(newTrainingDay);
         }
@@ -60,5 +64,6 @@ namespace Gym.Infrastructure.Services
 
             _trainingDayRepository.Delete(trainingDay);
         }
+
     }
 }

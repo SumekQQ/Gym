@@ -1,20 +1,23 @@
-﻿using System;
+﻿using NHibernate.Type;
+using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Gym.Core.Models
 {
     public class TrainingDay
     {
         public Guid Id { get; protected set; }
+        [DataType(DataType.Date)]
         public DateTime Date { get; protected set; }
         public TrainingPlan TrainingPlan { get; set; }
         public string Description { get; set; }
 
         protected TrainingDay() { }
 
-        public TrainingDay(TrainingPlan trainingPlan, string description)
+        public TrainingDay(TrainingPlan trainingPlan, string description, DateTime date)
         {
             Id = Guid.NewGuid();
-            Date = DateTime.UtcNow;
+            Date = date;
             setTrainingPlan(trainingPlan);
             Description = description;
         }

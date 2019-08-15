@@ -51,7 +51,6 @@ namespace Gym.Tests.Services
 
             var testCases = new List<Exception>()
             {
-                Assert.Throws<Exception>(() => exerciseService.Get("")),
                 Assert.Throws<Exception>(() => exerciseService.Get(Guid.NewGuid())),
             };
 
@@ -70,8 +69,6 @@ namespace Gym.Tests.Services
 
             var testCases = new List<Exception>()
             {
-                Assert.Throws<Exception>(() => exerciseService.Get((Category)1)),
-                Assert.Throws<Exception>(() => exerciseService.Get((Category)2)),
                 Assert.Throws<Exception>(() => exerciseService.GetAll()),
             };
 
@@ -86,7 +83,7 @@ namespace Gym.Tests.Services
         {
             exerciseRepositoryMock.Setup(x => x.Get("")).Returns(ExampleExercise);
 
-            var exerciseDTO = exerciseService.Get("");
+            var exerciseDTO = exerciseService.Get(Guid.NewGuid());
 
             Assert.Equal(exerciseDTO, mapperMock.Object.Map<Exercise, ExerciseDTO>(ExampleExercise));
             exerciseRepositoryMock.Verify(x => x.Get(""), Times.Once);
@@ -101,17 +98,6 @@ namespace Gym.Tests.Services
 
             Assert.Equal(exercisesDTO, mapperMock.Object.Map<IEnumerable<Exercise>, IEnumerable<ExerciseDTO>>(ExampleCollectionExercise));
             exerciseRepositoryMock.Verify(x => x.GetAll(), Times.Once);
-        }
-
-        [Fact]
-        public void get_category_collection_exercise_if_exist()
-        {
-            exerciseRepositoryMock.Setup(x => x.Get(Category.Legs)).Returns(ExampleCollectionExercise.Where(x => x.Category == Category.Legs));
-
-            var exercisesDTO = exerciseService.Get(Category.Legs);
-
-            Assert.Equal(exercisesDTO, mapperMock.Object.Map<IEnumerable<Exercise>, IEnumerable<ExerciseDTO>>(ExampleCollectionExercise.Where(x => x.Category == Category.Legs)));
-            exerciseRepositoryMock.Verify(x => x.Get(Category.Legs), Times.Once);
         }
 
         [Fact]

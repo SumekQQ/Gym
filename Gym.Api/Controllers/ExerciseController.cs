@@ -20,43 +20,31 @@ namespace Gym.Api.Controllers
         [HttpGet]
         public ActionResult Get()
         {
-            return Collection(_exerciseService.GetAll());
+            return GetCollection(_exerciseService.GetAll());
         }
 
         [HttpGet("{id}")]
         public ActionResult Get(Guid id)
         {
-            return Single(_exerciseService.Get(id));
-        }
-
-        [HttpGet("{category}")]
-        public ActionResult Get(Category category)
-        {
-            return Single(_exerciseService.Get(category));
+            return GetSingle(_exerciseService.Get(id));
         }
 
         [HttpPost]
         public ActionResult CreateNew([FromBody] CreateExercise command)
         {
-            Dispatch(command);
-
-            return Created($"get/{command.Name}", null);
+            return Post(command);
         }
 
         [HttpPut]
         public ActionResult Update([FromBody] UpdateExercise command)
         {
-            Dispatch(command);
-
-            return Created($"get/{command.Name}", null);
+            return Put(command);
         }
 
         [HttpDelete("{id}")]
         public ActionResult Delete(Guid id)
         {
-            _exerciseService.Delete(id);
-
-            return Ok();
+            return Delete(new DeleteExercise(id));
         }
     }
 }

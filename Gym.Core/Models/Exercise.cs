@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Gym.Core.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
@@ -23,13 +24,13 @@ namespace Gym.Core.Models
         public void Update(string name, Category category)
         {
             if (IsDefault)
-                throw new Exception("Can not update default exercise");
+                new DomainException(ErrorsCodes.DefaultExercise, "Can not update default exercise");
 
             if (Category == Category.Cardio && category != Category.Cardio)
-                throw new Exception("Can not update category exercise asigned to cardio category.");
+                new DomainException(ErrorsCodes.IncorrectCategory, "Can not update category exercise asigned to cardio category.");
 
             if (Category != Category.Cardio && category == Category.Cardio)
-                throw new Exception("Can not update to cardio category exercise asigned to weight category.");
+                new DomainException(ErrorsCodes.IncorrectCategory, "Can not update to cardio category exercise asigned to weight category.");
 
             setName(name);
             setCategory(Category);
@@ -39,7 +40,7 @@ namespace Gym.Core.Models
         {
             var pattern = @"[a-zA-Z0-9._.-]$";
             if (String.IsNullOrEmpty(name) || !Regex.IsMatch(name, pattern, RegexOptions.IgnoreCase))
-                throw new Exception("Provided exercise name is not correct.");
+                throw new DomainException(ErrorsCodes.IncorrectName, "Provided exercise name is not correct.");
 
             if (name != Name)
                 Name = name;

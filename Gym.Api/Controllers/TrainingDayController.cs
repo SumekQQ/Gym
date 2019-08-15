@@ -1,51 +1,54 @@
-﻿using Gym.Core.Repositories;
-using Gym.Infrastructure.Commands;
-using Gym.Infrastructure.Commands.TrainingDay;
-using Microsoft.AspNetCore.Mvc;
-using System;
+﻿//using Gym.Core.Repositories;
+//using Gym.Infrastructure.Commands;
+//using Gym.Infrastructure.Commands.TrainingDay;
+//using Gym.Infrastructure.Services;
+//using Microsoft.AspNetCore.Mvc;
+//using System;
 
-namespace Gym.Api.Controllers
-{
-    public class TrainingDayController : BaseController
-    {
-        private readonly ITrainingDayRepository _trainingDayRepository;
+//namespace Gym.Api.Controllers
+//{
+//    public class TrainingDayController : BaseController
+//    {
+//        private readonly ITrainingDayService _trainingDayService;
 
-        public TrainingDayController(ITrainingDayRepository trainingDayRepository,
-            ICommandDispatcher commandDispatcher) : base(commandDispatcher)
-        {
-            _trainingDayRepository = trainingDayRepository;
-        }
+//        public TrainingDayController(ITrainingDayService trainingDayService,
+//            ICommandDispatcher commandDispatcher) : base(commandDispatcher)
+//        {
+//            _trainingDayService = trainingDayService;
+//        }
 
-        [HttpGet]
-        public ActionResult GetAll()
-        {
-            return Collection(_trainingDayRepository.GetAll());
-        }
+//        [HttpGet]
+//        public ActionResult GetAll()
+//        {
+//            return Collection(_trainingDayService.GetAll());
+//        }
 
-        [HttpGet]
-        public ActionResult Get(Guid id)
-        {
-            return Single(_trainingDayRepository.Get(id));
-        }
+//        [HttpGet("{id}")]
+//        public ActionResult Get(Guid id)
+//        {
+//            return Single(_trainingDayService.Get(id));
+//        }
 
-        [HttpGet]
-        public ActionResult Get(DateTime date)
-        {
-            return Single(_trainingDayRepository.Get(date));
-        }
+//        [HttpPost]
+//        public ActionResult CreateNew([FromBody] CreateTrainingDay command)
+//        {
+//            Dispatch(command);
 
-        [HttpPost]
-        public ActionResult CreateNew([FromBody] CreateTrainingDay command)
-        {
-            Dispatch(command);
-
-            return Created($"get/", null);
-        }
+//            return Created($"get/", null);
+//        }
   
-        [HttpPut]
-        public ActionResult Update([FromBody] UpdateTrainingDay command)
-        {
-            return Created($"get/", null);
-        }
-    }
-}
+//        [HttpPut]
+//        public ActionResult Update([FromBody] UpdateTrainingDay command)
+//        {
+//            return Created($"get/", null);
+//        }
+
+//        [HttpDelete("{id}")]
+//        public ActionResult Delete(Guid id)
+//        {
+//            _trainingDayService.Delete(id);
+
+//            return Ok();
+//        }
+//    }
+//}

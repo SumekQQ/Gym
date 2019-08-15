@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Gym.Core.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace Gym.Infrastructure.Services
         protected T Single<T>(T data)
         {
             if (data == null)
-                throw new Exception($"Finding data not exist or return null value");
+                throw new ServiceException(ErrorsCodes.ItemNotFound, $"Finding data not exist or return null value");
 
             return data;
         }
@@ -25,7 +26,7 @@ namespace Gym.Infrastructure.Services
         protected IEnumerable<T> Collection<T>(IEnumerable<T> data)
         {
             if(data == null || data.Count() < 1)
-                throw new Exception($"Finding data not exist or return null value");
+                throw new ServiceException(ErrorsCodes.ItemNotFound, $"Finding data not exist or return null value");
 
             return data;
         }

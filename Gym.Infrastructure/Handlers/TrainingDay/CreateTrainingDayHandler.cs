@@ -15,7 +15,7 @@ namespace Gym.Infrastructure.Handlers.TrainingDay
 
         public void Handle(CreateTrainingDay command)
         {
-            _trainingDayService.CreateNew(command.TrainingPlanId, command.Description);
+            _trainingDayService.CreateNew(command.TrainingPlanId, command.Description, command.Date);
         }
     }
 }

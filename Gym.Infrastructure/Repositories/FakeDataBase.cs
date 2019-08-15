@@ -1,4 +1,5 @@
 ﻿using Gym.Core.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -58,8 +59,8 @@ namespace Gym.Infrastructure.Repositories
         {
             return new List<TrainingDay>
             {
-                new TrainingDay(TrainingPlans.First(), "trainig A"),
-                new TrainingDay(TrainingPlans.Last(), "trainig B"),
+                new TrainingDay(TrainingPlans.First(), "trainig A", DateTime.Now),
+                new TrainingDay(TrainingPlans.Last(), "trainig B", DateTime.Now),
             };
         }
 

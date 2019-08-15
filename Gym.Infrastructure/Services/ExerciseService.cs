@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
+using Gym.Core.Exceptions;
 using Gym.Core.Models;
 using Gym.Core.Repositories;
 using Gym.Infrastructure.DTO;
-using Gym.Infrastructure.Extensions;
 using System;
 using System.Collections.Generic;
 
@@ -17,25 +17,17 @@ namespace Gym.Infrastructure.Services
             _exerciseRepository = exerciseRepository;
         }
 
-        public ExerciseDTO Get(string name)
-            => _mapper.Map<Exercise, ExerciseDTO>(Single(_exerciseRepository.Get(name)));
-
-
-        public ExerciseDTO Get(Guid id)
-            => _mapper.Map<Exercise, ExerciseDTO>(Single(_exerciseRepository.Get(id)));
-
-
-        public IEnumerable<ExerciseDTO> Get(Category category)
-            => _mapper.Map<IEnumerable<Exercise>, IEnumerable<ExerciseDTO>>(Collection(_exerciseRepository.Get(category)));
-
-
         public IEnumerable<ExerciseDTO> GetAll()
             => _mapper.Map<IEnumerable<Exercise>, IEnumerable<ExerciseDTO>>(Collection(_exerciseRepository.GetAll()));
+
+        public ExerciseDTO Get(Guid id)
+            => _mapper.Map<Exercise, ExerciseDTO>(_exerciseRepository.Get(id));
+
 
         public void CreateNew(string name, Category category)
         {
             if (_exerciseRepository.IsExist(name))
-                throw new Exception($"{ErrorsCodes.ItemExist}");
+                throw new ServiceException(ErrorsCodes.ItemExist, $"Cannot create item using name={name}. Provided item currently exist.");
 
             var newExercise = new Exercise(name, category);
 
@@ -55,7 +47,7 @@ namespace Gym.Infrastructure.Services
             var exerciseToDelete = Single(_exerciseRepository.Get(id));
 
             if (exerciseToDelete.IsDefault)
-                throw new Exception("Can not delete default exercise.");
+                throw new DomainException(ErrorsCodes.DefaultExercise, "Can not delete default exercise.");
 
             _exerciseRepository.Delete(exerciseToDelete);
         }
