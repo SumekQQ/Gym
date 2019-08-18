@@ -24,13 +24,13 @@ namespace Gym.Core.Models
         public void Update(string name, Category category)
         {
             if (IsDefault)
-                new DomainException(ErrorsCodes.DefaultExercise, "Can not update default exercise");
+                throw new DomainException(ErrorsCodes.DefaultExercise, "Can not update default exercise");
 
             if (Category == Category.Cardio && category != Category.Cardio)
-                new DomainException(ErrorsCodes.IncorrectCategory, "Can not update category exercise asigned to cardio category.");
+                throw new DomainException(ErrorsCodes.IncorrectCategory, "Can not update category exercise asigned to cardio category.");
 
             if (Category != Category.Cardio && category == Category.Cardio)
-                new DomainException(ErrorsCodes.IncorrectCategory, "Can not update to cardio category exercise asigned to weight category.");
+                throw new DomainException(ErrorsCodes.IncorrectCategory, "Can not update to cardio category exercise asigned to weight category.");
 
             setName(name);
             setCategory(Category);

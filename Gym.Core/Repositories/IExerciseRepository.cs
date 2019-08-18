@@ -1,31 +1,22 @@
 ﻿using Gym.Core.Models;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Gym.Core.Repositories
 {
     public interface IExerciseRepository : IRepository
     {
-        Exercise Get(Guid id);
+        Task<Exercise> Get(Guid id);
 
-        Exercise Get(string name);
+        Task<IEnumerable<Exercise>> GetAll();
 
-        IEnumerable<Exercise> Get(Category category);
+        Task<bool> IsExist(string name);
 
-        IEnumerable<Exercise> GetAll();
+        Task Add(Exercise exercise);
 
-        bool IsExist(Guid id);
+        Task Delete(Exercise exercise);
 
-        bool IsExist(string name);
-
-        bool IsExist(Category category);
-
-        bool IsExist(Exercise exercise);
-
-        void Add(Exercise exercise);
-
-        void Delete(Exercise exercise);
-
-        void Update(Exercise exercise);
+        Task Update(Exercise exercise);
     }
 }

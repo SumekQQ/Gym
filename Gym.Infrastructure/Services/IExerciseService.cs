@@ -9,14 +9,14 @@ namespace Gym.Infrastructure.Services
 {
     public interface IExerciseService : IService
     {
-        IEnumerable<ExerciseDTO> GetAll();
+        Task<IEnumerable<ExerciseDTO>> GetAll();
 
-        ExerciseDTO Get(Guid id);
+        Task<ExerciseDTO> Get(Guid id);
 
-        void CreateNew(string name, Category category);
+        Task CreateNew(string name, Category category);
 
-        void Update(Guid id, string name, Category category);
+        Task Update(Guid id, string name, Category category);
 
-        void Delete(Guid id);
+        Task Delete(Guid id);
     }
 }

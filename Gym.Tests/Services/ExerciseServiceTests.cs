@@ -1,14 +1,13 @@
-﻿using AutoMapper;
+﻿using Gym.Core.Exceptions;
 using Gym.Core.Models;
-using Gym.Core.Repositories;
 using Gym.Infrastructure.DTO;
-using Gym.Infrastructure.Extensions;
 using Gym.Infrastructure.Repositories;
 using Gym.Infrastructure.Services;
 using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Gym.Tests.Services
@@ -16,168 +15,156 @@ namespace Gym.Tests.Services
     public class ExerciseServiceTests : ServiceTestsTemplate
     {
         [Fact]
-        public void add_new_exercise()
+        public async Task get_single_exercise_if_not_exist()
         {
-            exerciseService.CreateNew("NewExercise", Category.Abs);
+            exerciseRepositoryMock.Setup(x => x.Get(Guid.NewGuid())).ReturnsAsync(value: null);
 
-            exerciseRepositoryMock.Verify(x => x.Add(It.IsAny<Exercise>()), Times.Once);
-        }
+            var ex = await Assert.ThrowsAsync<ServiceException>(() => exerciseService.Get(Guid.NewGuid()));
 
-        [Fact]
-        public void add_new_exercise_with_empty_name()
-        {
-            Exception ex = Assert.Throws<Exception>(() => exerciseService.CreateNew("", Category.Abs));
-            Assert.Equal("Provided exercise name is not correct.", ex.Message);
-            exerciseRepositoryMock.Verify(x => x.Add(It.IsAny<Exercise>()), Times.Never);
-        }
-
-        [Fact]
-        public void add_new_exercise_when_provided_name_exist()
-        {
-            var existItem = FakeDataBase.GetInstance().Exercises.First();
-
-            exerciseRepositoryMock.Setup(x => x.IsExist(existItem.Name)).Returns(true);
-            Exception ex = Assert.Throws<Exception>(() => exerciseService.CreateNew(existItem.Name, existItem.Category));
-
-            Assert.Equal($"{ErrorsCodes.ItemExist}", ex.Message);
-            exerciseRepositoryMock.Verify(x => x.Add(It.IsAny<Exercise>()), Times.Never);
-        }
-
-        [Fact]
-        public void get_single_exercise_if_not_exist()
-        {
-            exerciseRepositoryMock.Setup(x => x.Get("")).Returns(value: null);
-            exerciseRepositoryMock.Setup(x => x.Get(Guid.NewGuid())).Returns(value: null);
-
-            var testCases = new List<Exception>()
-            {
-                Assert.Throws<Exception>(() => exerciseService.Get(Guid.NewGuid())),
-            };
-
-            foreach (var testCase in testCases)
-                Assert.Equal($"Finding data not exist or return null value", testCase.Message);
-
-            exerciseRepositoryMock.Verify(x => x.Get(It.IsAny<string>()), Times.Once);
+            Assert.Equal(ErrorsCodes.ItemNotFound, ex.Code);
             exerciseRepositoryMock.Verify(x => x.Get(It.IsAny<Guid>()), Times.Once);
         }
 
         [Fact]
-        public void get_colection_exercises_if_not_exist()
+        public async Task get_colection_exercises_if_not_exist()
         {
-            exerciseRepositoryMock.Setup(x => x.Get((Category)1)).Returns(value: null);
-            exerciseRepositoryMock.Setup(x => x.Get((Category)2)).Returns(new List<Exercise>());
+            exerciseRepositoryMock.Setup(x => x.GetAll()).ReturnsAsync(value: null);
 
-            var testCases = new List<Exception>()
-            {
-                Assert.Throws<Exception>(() => exerciseService.GetAll()),
-            };
+            var ex = await Assert.ThrowsAsync<ServiceException>(() => exerciseService.GetAll());
 
-            foreach (var testCase in testCases)
-                Assert.Equal($"Finding data not exist or return null value", testCase.Message);
-
-            exerciseRepositoryMock.Verify(x => x.Get(It.IsAny<Category>()), Times.AtLeast(2));
+            Assert.Equal(ErrorsCodes.ItemNotFound, ex.Code);
+            exerciseRepositoryMock.Verify(x => x.GetAll(), Times.Once);
         }
 
         [Fact]
-        public void get_single_exercise_if_exist()
+        public async Task get_single_exercise_if_exist()
         {
-            exerciseRepositoryMock.Setup(x => x.Get("")).Returns(ExampleExercise);
+            exerciseRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).ReturnsAsync(ExampleExercise);
 
-            var exerciseDTO = exerciseService.Get(Guid.NewGuid());
+            var exerciseDTO = await exerciseService.Get(Guid.NewGuid());
 
             Assert.Equal(exerciseDTO, mapperMock.Object.Map<Exercise, ExerciseDTO>(ExampleExercise));
-            exerciseRepositoryMock.Verify(x => x.Get(""), Times.Once);
+            exerciseRepositoryMock.Verify(x => x.Get(It.IsAny<Guid>()), Times.Once);
         }
 
         [Fact]
-        public void get_all_collection_exercise_if_exist()
+        public async Task get_all_collection_exercise_if_exist()
         {
-            exerciseRepositoryMock.Setup(x => x.GetAll()).Returns(ExampleCollectionExercise);
+            exerciseRepositoryMock.Setup(x => x.GetAll()).ReturnsAsync(ExampleCollectionExercise);
 
-            var exercisesDTO = exerciseService.GetAll();
+            var exercisesDTO = await exerciseService.GetAll();
 
             Assert.Equal(exercisesDTO, mapperMock.Object.Map<IEnumerable<Exercise>, IEnumerable<ExerciseDTO>>(ExampleCollectionExercise));
             exerciseRepositoryMock.Verify(x => x.GetAll(), Times.Once);
         }
 
         [Fact]
-        public void update_exercise_if_not_exist()
+        public async Task add_new_exercise()
         {
-            exerciseRepositoryMock.Setup(x => x.Get(ExampleExercise.Id)).Returns(value: null);
+            await exerciseService.CreateNew("NewExercise", Category.Abs);
 
-            var ex = Assert.Throws<Exception>(() => exerciseService.Update(ExampleExercise.Id, "", (Category)0));
+            exerciseRepositoryMock.Verify(x => x.Add(It.IsAny<Exercise>()), Times.Once);
+        }
 
-            Assert.Equal($"Finding data not exist or return null value", ex.Message);
+        [Fact]
+        public async Task add_new_exercise_with_empty_name()
+        {
+            var ex = await Assert.ThrowsAsync<DomainException>(() => exerciseService.CreateNew("", Category.Abs));
+
+            Assert.Equal(ErrorsCodes.IncorrectName, ex.Code);
+            exerciseRepositoryMock.Verify(x => x.Add(It.IsAny<Exercise>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task add_new_exercise_when_provided_name_exist()
+        {
+            var existItem = FakeDataBase.GetInstance().Exercises.First();
+
+            exerciseRepositoryMock.Setup(x => x.IsExist(existItem.Name)).ReturnsAsync(true);
+            var ex = await Assert.ThrowsAsync<ServiceException>(() => exerciseService.CreateNew(existItem.Name, existItem.Category));
+
+            Assert.Equal(ErrorsCodes.ItemExist, ex.Code);
+            exerciseRepositoryMock.Verify(x => x.Add(It.IsAny<Exercise>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task update_exercise_if_not_exist()
+        {
+            exerciseRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).ReturnsAsync(value: null);
+
+            var ex = await Assert.ThrowsAsync<ServiceException>(() => exerciseService.Update(Guid.NewGuid(), "", (Category)0));
+
+            Assert.Equal(ErrorsCodes.ItemNotFound, ex.Code);
             exerciseRepositoryMock.Verify(x => x.Get(It.IsAny<Guid>()), Times.Once);
             exerciseRepositoryMock.Verify(x => x.Update(It.IsAny<Exercise>()), Times.Never);
         }
 
         [Fact]
-        public void update_exercise_with_empty_name()
+        public async Task update_exercise_with_empty_name()
         {
-            exerciseRepositoryMock.Setup(x => x.Get(ExampleExercise.Id)).Returns(ExampleExercise);
+            exerciseRepositoryMock.Setup(x => x.Get(ExampleExercise.Id)).ReturnsAsync(ExampleExercise);
 
-            var ex = Assert.Throws<Exception>(() => exerciseService.Update(ExampleExercise.Id, "", ExampleExercise.Category));
+            var ex = await Assert.ThrowsAsync<DomainException>(() => exerciseService.Update(ExampleExercise.Id, "", ExampleExercise.Category));
 
-            Assert.Equal("Provided exercise name is not correct.", ex.Message);
+            Assert.Equal(ErrorsCodes.IncorrectName, ex.Code);
             exerciseRepositoryMock.Verify(x => x.Get(It.IsAny<Guid>()), Times.Once);
             exerciseRepositoryMock.Verify(x => x.Update(It.IsAny<Exercise>()), Times.Never);
         }
 
         [Fact]
-        public void update_cardio_exercise_using_other_category()
+        public async Task update_cardio_exercise_using_other_category()
         {
             var cardioExercise = ExampleCollectionExercise.First(x => x.Category == Category.Cardio);
-            exerciseRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns(cardioExercise);
+            exerciseRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).ReturnsAsync(cardioExercise);
 
-            var ex = Assert.Throws<Exception>(() => exerciseService.Update(cardioExercise.Id, cardioExercise.Name, (Category)1));
+            var ex = await Assert.ThrowsAsync<DomainException>(() => exerciseService.Update(cardioExercise.Id, cardioExercise.Name, (Category)1));
 
-            Assert.Equal("Can not update category exercise asigned to cardio category.", ex.Message);
+            Assert.Equal(ErrorsCodes.IncorrectCategory, ex.Code);
             exerciseRepositoryMock.Verify(x => x.Get(It.IsAny<Guid>()), Times.Once);
             exerciseRepositoryMock.Verify(x => x.Update(It.IsAny<Exercise>()), Times.Never);
         }
 
         [Fact]
-        public void update_weight_exercise_using_cardio_category()
+        public async Task update_weight_exercise_using_cardio_category()
         {
-            exerciseRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns(ExampleExercise);
+            exerciseRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).ReturnsAsync(ExampleExercise);
 
-            var ex = Assert.Throws<Exception>(() => exerciseService.Update(ExampleExercise.Id, ExampleExercise.Name, Category.Cardio));
+            var ex = await Assert.ThrowsAsync<DomainException>(() => exerciseService.Update(ExampleExercise.Id, ExampleExercise.Name, Category.Cardio));
 
-            Assert.Equal("Can not update to cardio category exercise asigned to weight category.", ex.Message);
+            Assert.Equal(ErrorsCodes.IncorrectCategory, ex.Code);
             exerciseRepositoryMock.Verify(x => x.Get(It.IsAny<Guid>()), Times.Once);
             exerciseRepositoryMock.Verify(x => x.Update(It.IsAny<Exercise>()), Times.Never);
         }
 
         [Fact]
-        public void update_exercise_correctly()
+        public async Task update_exercise_correctly()
         {
-            exerciseRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns(ExampleExercise);
+            exerciseRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).ReturnsAsync(ExampleExercise);
 
-            exerciseService.Update(ExampleExercise.Id, "UpdateExercise", Category.Shoulders);
+            await exerciseService.Update(ExampleExercise.Id, "UpdateExercise", Category.Shoulders);
 
             exerciseRepositoryMock.Verify(x => x.Get(It.IsAny<Guid>()), Times.Once);
             exerciseRepositoryMock.Verify(x => x.Update(It.IsAny<Exercise>()), Times.Once);
         }
 
         [Fact]
-        public void delete_exercise_if_not_exist()
+        public async Task delete_exercise_if_not_exist()
         {
-            exerciseRepositoryMock.Setup(x => x.Get(ExampleExercise.Id)).Returns(value: null);
+            exerciseRepositoryMock.Setup(x => x.Get(ExampleExercise.Id)).ReturnsAsync(value: null);
 
-            var ex = Assert.Throws<Exception>(() => exerciseService.Delete(ExampleExercise.Id));
+            var ex = await Assert.ThrowsAsync<ServiceException>(() => exerciseService.Delete(ExampleExercise.Id));
 
-            Assert.Equal($"Finding data not exist or return null value", ex.Message);
+            Assert.Equal(ErrorsCodes.ItemNotFound, ex.Code);
             exerciseRepositoryMock.Verify(x => x.Get(It.IsAny<Guid>()), Times.Once);
             exerciseRepositoryMock.Verify(x => x.Delete(It.IsAny<Exercise>()), Times.Never);
         }
 
         [Fact]
-        public void delete_exercise_correctly()
+        public async Task delete_exercise_correctly()
         {
-            exerciseRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns(ExampleExercise);
+            exerciseRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).ReturnsAsync(ExampleExercise);
 
-            exerciseService.Delete(ExampleExercise.Id);
+            await exerciseService.Delete(ExampleExercise.Id);
 
             exerciseRepositoryMock.Verify(x => x.Get(It.IsAny<Guid>()), Times.Once);
             exerciseRepositoryMock.Verify(x => x.Delete(It.IsAny<Exercise>()), Times.Once);
