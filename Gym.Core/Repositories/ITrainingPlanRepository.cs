@@ -1,25 +1,22 @@
 ﻿using Gym.Core.Models;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Gym.Core.Repositories
 {
     public interface ITrainingPlanRepository : IRepository
     {
-        TrainingPlan Get(Guid id);
+        Task<TrainingPlan> Get(Guid id);
 
-        IEnumerable<TrainingPlan> GetAll();
+        Task<IEnumerable<TrainingPlan>> GetAll();
 
-        bool IsExist(Guid id);
+        Task<bool> IsExist(string name);
 
-        bool IsExist(string name);
+        Task Add(TrainingPlan trainingDay);
 
-        bool IsExist(TrainingPlan trainingPlan);
+        Task Delete(TrainingPlan trainingPlan);
 
-        void Add(TrainingPlan trainingDay);
-
-        void Delete(TrainingPlan trainingPlan);
-
-        void Update(TrainingPlan trainingPlan);
+        Task Update(TrainingPlan trainingPlan);
     }
 }

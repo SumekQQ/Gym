@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
+using Gym.Core.Exceptions;
 using Gym.Core.Models;
 using Gym.Core.Repositories;
 using Gym.Infrastructure.DTO;
-using Gym.Infrastructure.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Gym.Infrastructure.Services
 {
@@ -20,50 +21,46 @@ namespace Gym.Infrastructure.Services
             _exerciseRepository = exerciseRepository;
         }
 
-        public TrainingPlanDTO Get(Guid id)
-        {
-            return _mapper.Map<TrainingPlan, TrainingPlanDTO>(Single(_trainingPlanRepository.Get(id)));
-        }
+        public async Task<TrainingPlanDTO> Get(Guid id)
+            => _mapper.Map<TrainingPlan, TrainingPlanDTO>(Single(await _trainingPlanRepository.Get(id)));
 
-        public IEnumerable<TrainingPlanDTO> GetAll()
-        {
-            return _mapper.Map<IEnumerable<TrainingPlan>, IEnumerable<TrainingPlanDTO>>(Collection(_trainingPlanRepository.GetAll()));
-        }
+        public async Task<IEnumerable<TrainingPlanDTO>> GetAll()
+            => _mapper.Map<IEnumerable<TrainingPlan>, IEnumerable<TrainingPlanDTO>>(Collection(await _trainingPlanRepository.GetAll()));
 
-        public void CreateNew(string name, IEnumerable<Guid> exercisesId)
+        public async Task CreateNew(string name, IEnumerable<Guid> exercisesId)
         {
-            if (_trainingPlanRepository.IsExist(name))
-                throw new Exception($"{ErrorsCodes.ItemExist}");
+            if (await _trainingPlanRepository.IsExist(name))
+                throw new ServiceException(ErrorsCodes.ItemExist);
 
-            var exercisesList = Collection(getExercisesList(exercisesId));
+            var exercisesList = Collection(await getExercisesList(exercisesId));
             var newTrainingPlan = new TrainingPlan(name, exercisesList);
 
-            _trainingPlanRepository.Add(newTrainingPlan);
+            await _trainingPlanRepository.Add(newTrainingPlan);
         }
 
-        public void Update(Guid id, string name, IEnumerable<Guid> exercisesId)
+        public async Task Update(Guid id, string name, IEnumerable<Guid> exercisesId)
         {
-            var trainingPlanToUpdate = Single(_trainingPlanRepository.Get(id));
-            var exercisesList = Collection(getExercisesList(exercisesId)).ToList();
+            var trainingPlanToUpdate = Single(await _trainingPlanRepository.Get(id));
+            var exercisesList = Collection(await getExercisesList(exercisesId)).ToList();
 
             trainingPlanToUpdate.Update(name, exercisesList);
-            _trainingPlanRepository.Update(trainingPlanToUpdate);
+            await _trainingPlanRepository.Update(trainingPlanToUpdate);
         }
 
-        public void Delete(Guid id)
+        public async Task Delete(Guid id)
         {
-            var trainingPlanToDelete = Single(_trainingPlanRepository.Get(id));
+            var trainingPlanToDelete = Single(await _trainingPlanRepository.Get(id));
 
-            _trainingPlanRepository.Delete(trainingPlanToDelete);
+            await _trainingPlanRepository.Delete(trainingPlanToDelete);
         }
 
-        private List<Exercise> getExercisesList(IEnumerable<Guid> exercisesId)
+        private async Task<List<Exercise>> getExercisesList(IEnumerable<Guid> exercisesId)
         {
             Collection(exercisesId);
             var exercises = new List<Exercise>();
 
             foreach (var id in exercisesId)
-                exercises.Add(Single(_exerciseRepository.Get(id)));
+                exercises.Add(Single(await _exerciseRepository.Get(id)));
 
             return exercises;
         }

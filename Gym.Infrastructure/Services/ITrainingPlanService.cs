@@ -1,19 +1,20 @@
 ﻿using Gym.Infrastructure.DTO;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Gym.Infrastructure.Services
 {
     public interface ITrainingPlanService : IService
     {
-        TrainingPlanDTO Get(Guid id);
+        Task<TrainingPlanDTO> Get(Guid id);
 
-        IEnumerable<TrainingPlanDTO> GetAll();
+        Task<IEnumerable<TrainingPlanDTO>> GetAll();
 
-        void CreateNew(string name, IEnumerable<Guid> exercisesId);
+        Task CreateNew(string name, IEnumerable<Guid> exercisesId);
 
-        void Update(Guid id, string name, IEnumerable<Guid> exercisesId);
+        Task Update(Guid id, string name, IEnumerable<Guid> exercisesId);
 
-        void Delete(Guid id);
+        Task Delete(Guid id);
     }
 }

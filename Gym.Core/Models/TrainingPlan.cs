@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Gym.Core.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -30,7 +31,7 @@ namespace Gym.Core.Models
         {
             var pattern = @"[a-zA-Z0-9._.-]$";
             if (String.IsNullOrEmpty(name) || !Regex.IsMatch(name, pattern, RegexOptions.IgnoreCase))
-                throw new Exception("Provided name is not correct.");
+                throw new DomainException(ErrorsCodes.IncorrectName, "Provided name is not correct.");
 
             if (name != Name)
                 Name = name;
@@ -39,7 +40,7 @@ namespace Gym.Core.Models
         private void setExerciseList(IEnumerable<Exercise> exercises)
         {
             if (exercises == null || exercises.Count() < 1)
-                throw new Exception("Provided exercises list cannot be empty");
+                throw new DomainException(ErrorsCodes.IncorrectData, "Provided exercises list cannot be empty");
 
             var trainingPlanExercises = new List<TrainingPlanExercise>();
             foreach (var exercise in exercises)

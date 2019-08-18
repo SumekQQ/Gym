@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Gym.Infrastructure.Repositories
 {
@@ -17,39 +18,31 @@ namespace Gym.Infrastructure.Repositories
             _context = context;
         }
 
-        public void Add(TrainingPlan trainingPlan)
+        public async Task<TrainingPlan> Get(Guid id)
+           => await _context.TrainingPlans.Include(x => x.ExerciseIds).ThenInclude(x => x.Exercise).SingleAsync(x => x.Id == id);
+
+        public async Task<IEnumerable<TrainingPlan>> GetAll()
+           => await _context.TrainingPlans.Include(x => x.ExerciseIds).ThenInclude(x => x.Exercise).ToListAsync();
+
+        public async Task<bool> IsExist(string name)
+            => await _context.TrainingPlans.AnyAsync(x => x.Name == name);
+
+        public async Task Add(TrainingPlan trainingPlan)
         {
             _context.TrainingPlans.Add(trainingPlan);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public TrainingPlan Get(Guid id)
-        {
-            return _context.TrainingPlans.Include(x => x.ExerciseIds).ThenInclude(x => x.Exercise).Single(x => x.Id == id);
-        }
-
-        public IEnumerable<TrainingPlan> GetAll()
-           => _context.TrainingPlans.Include(x => x.ExerciseIds).ThenInclude(x => x.Exercise);
-
-        public bool IsExist(Guid id)
-            => _context.TrainingPlans.Any(x => x.Id == id);
-
-        public bool IsExist(string name)
-            => _context.TrainingPlans.Any(x => x.Name == name);
-
-        public bool IsExist(TrainingPlan trainingPlan)
-            => _context.TrainingPlans.Any(x => x == trainingPlan);
-
-        public void Delete(TrainingPlan trainingPlan)
+        public async Task Delete(TrainingPlan trainingPlan)
         {
             _context.TrainingPlans.Remove(trainingPlan);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void Update(TrainingPlan trainingPlan)
+        public async Task Update(TrainingPlan trainingPlan)
         {
             _context.TrainingPlans.Update(trainingPlan);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 }
