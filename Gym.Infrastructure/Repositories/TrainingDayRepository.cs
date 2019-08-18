@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Gym.Infrastructure.Repositories
 {
@@ -17,63 +18,34 @@ namespace Gym.Infrastructure.Repositories
             _context = context;
         }
 
-        public TrainingDay Get(Guid id)
-        {
-            return _context.TrainingDays.Include(x=>x.TrainingPlan).Single(x => x.Id == id);
-        }
+        public async Task<TrainingDay> Get(Guid id)
+            => await _context.TrainingDays.Include(x => x.TrainingPlan).SingleAsync(x => x.Id == id);
 
-        public TrainingDay Get(DateTime date)
-        {
-            return _context.TrainingDays.Include(x => x.TrainingPlan).Single(x => x.Date == date);
-        }
+        public async Task<IEnumerable<TrainingDay>> GetAll()
+            => await _context.TrainingDays.Include(x => x.TrainingPlan).ToListAsync();
 
-        public IEnumerable<TrainingDay> Get(TrainingPlan trainingPlan)
-        {
-            return _context.TrainingDays.Include(x => x.TrainingPlan).Where(x => x.TrainingPlan == trainingPlan);
-        }
+        public async Task<bool> IsExist(DateTime date)
+            => await _context.TrainingDays.AnyAsync(x => x.Date.Year == date.Year && x.Date.Month == date.Month && x.Date.Day == date.Day);
 
-        public IEnumerable<TrainingDay> GetAll()
-        {
-            return _context.TrainingDays.Include(x=>x.TrainingPlan);
-        }
+        public async Task<bool> IsExist(TrainingPlan trainingPlan)
+            => await _context.TrainingDays.AnyAsync(x => x.TrainingPlan == trainingPlan);
 
-        public bool IsExist(DateTime date)
-        {
-            return _context.TrainingDays.Any(x => x.Date.Year == date.Year && x.Date.Month == date.Month && x.Date.Day == date.Day);
-        }
-
-        public bool IsExist(TrainingPlan trainingPlan)
-        {
-            return _context.TrainingDays.Any(x => x.TrainingPlan == trainingPlan);
-        }
-
-        public bool IsExist(TrainingDay trainingDay)
-        {
-            return _context.TrainingDays.Any(x => x == trainingDay);
-        }
-
-        public bool IsExist(Guid id)
-        {
-            return _context.TrainingDays.Any(x => x.Id == id);
-        }
-
-        public void Delete(TrainingDay trainingDay)
+        public async Task Delete(TrainingDay trainingDay)
         {
             _context.TrainingDays.Remove(trainingDay);
-            _context.SaveChanges();
-
+            await _context.SaveChangesAsync();
         }
 
-        public void Update(TrainingDay trainingDay)
+        public async Task Update(TrainingDay trainingDay)
         {
             _context.TrainingDays.Update(trainingDay);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void Add(TrainingDay trainingDay)
+        public async Task Add(TrainingDay trainingDay)
         {
             _context.TrainingDays.Add(trainingDay);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 }

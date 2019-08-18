@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
+using Gym.Core.Exceptions;
 using Gym.Core.Models;
 using Gym.Core.Repositories;
 using Gym.Infrastructure.DTO;
-using Gym.Infrastructure.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Gym.Infrastructure.Services
 {
@@ -19,50 +20,39 @@ namespace Gym.Infrastructure.Services
             _trainingPlanRepository = trainingPlanRepository;
         }
 
-        public IEnumerable<TrainingDayDTO> GetAll()
-            => _mapper.Map<IEnumerable<TrainingDay>, IEnumerable<TrainingDayDTO>>(Collection(_trainingDayRepository.GetAll()));
-        
-        public TrainingDayDTO Get(DateTime date)
-            => _mapper.Map<TrainingDay, TrainingDayDTO>(Single(_trainingDayRepository.Get(date)));
+        public async Task<TrainingDayDTO> Get(Guid id)
+            => _mapper.Map<TrainingDay, TrainingDayDTO>(Single(await _trainingDayRepository.Get(id)));
 
-        public TrainingDayDTO Get(Guid id)
-            => _mapper.Map<TrainingDay, TrainingDayDTO>(Single(_trainingDayRepository.Get(id)));
+        public async Task<IEnumerable<TrainingDayDTO>> GetAll()
+            => _mapper.Map<IEnumerable<TrainingDay>, IEnumerable<TrainingDayDTO>>(Collection(await _trainingDayRepository.GetAll()));
 
-
-        public IEnumerable<TrainingDayDTO> GetCollection(Guid trainingPlanId)
+        public async Task CreateNew(Guid trainingPlanId, string description, string date)
         {
-            var trainingPlan = Single(_trainingPlanRepository.Get(trainingPlanId));
-
-            return _mapper.Map<IEnumerable<TrainingDay>, IEnumerable<TrainingDayDTO>>(Collection(_trainingDayRepository.Get(trainingPlan)));
-        }
-
-        public void CreateNew(Guid trainingPlanId, string description, string date)
-        {
-            var trainingPlan = Single(_trainingPlanRepository.Get(trainingPlanId));
+            var trainingPlan = Single(await _trainingPlanRepository.Get(trainingPlanId));
             var dateTime = DateTime.Parse(date);
 
-            if (_trainingDayRepository.IsExist(trainingPlan) && _trainingDayRepository.IsExist(dateTime))
-                throw new Exception($"{ErrorsCodes.ItemExist}");
+            if (await _trainingDayRepository.IsExist(trainingPlan) && await _trainingDayRepository.IsExist(dateTime))
+                throw new ServiceException(ErrorsCodes.ItemExist, $"Cannot create item using date={dateTime}. Provided item currently exist.");
 
             var newTrainingDay = new TrainingDay(trainingPlan, description, dateTime);
 
-            _trainingDayRepository.Add(newTrainingDay);
+            await _trainingDayRepository.Add(newTrainingDay);
         }
 
-        public void Update(Guid id, Guid trainingPlanId, string description)
+        public async Task Update(Guid id, Guid trainingPlanId, string description)
         {
-            var trainingDay = Single(_trainingDayRepository.Get(trainingPlanId));
-            var trainingPlan = Single(_trainingPlanRepository.Get(trainingPlanId));
+            var trainingDay = Single(await _trainingDayRepository.Get(trainingPlanId));
+            var trainingPlan = Single(await _trainingPlanRepository.Get(trainingPlanId));
 
             trainingDay.Update(trainingPlan, description);
-            _trainingDayRepository.Update(trainingDay);
+            await _trainingDayRepository.Update(trainingDay);
         }
 
-        public void Delete(Guid id)
+        public async Task Delete(Guid id)
         {
-            var trainingDay = Single(_trainingDayRepository.Get(id));
+            var trainingDay = Single(await _trainingDayRepository.Get(id));
 
-            _trainingDayRepository.Delete(trainingDay);
+            await _trainingDayRepository.Delete(trainingDay);
         }
 
     }

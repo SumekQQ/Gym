@@ -1,4 +1,5 @@
-﻿using NHibernate.Type;
+﻿using Gym.Core.Exceptions;
+using NHibernate.Type;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -31,7 +32,7 @@ namespace Gym.Core.Models
         private void setTrainingPlan(TrainingPlan trainingPlan)
         {
             if (trainingPlan == null)
-                throw new Exception("Provided training plan cannot be empty");
+                throw new DomainException(ErrorsCodes.IncorrectData, "Provided training plan cannot be empty");
 
             if (TrainingPlan != trainingPlan)
                 TrainingPlan = trainingPlan;
