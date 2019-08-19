@@ -2,21 +2,22 @@
 using Gym.Infrastructure.DTO;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Gym.Infrastructure.Services
 {
     public interface IWeightResultService : IService
     {
-        WeightResultDTO Get(Guid id);
+        Task<WeightResultDTO> Get(Guid id);
 
-        IEnumerable<WeightResultDTO> Get(TrainingDay trainingDay);
+        Task<IEnumerable<WeightResultDTO>> Get(TrainingDay trainingDay);
 
-        IEnumerable<WeightResultDTO> Get(Exercise exercise);
+        Task<IEnumerable<WeightResultDTO>> Get(Exercise exercise);
 
-        void CreateNew(Guid trainingDayId, Guid exerciseId, int series, float weight, int reps);
+        Task CreateNew(Guid trainingDayId, Guid exerciseId, int series, float weight, int reps);
 
-        void Update(Guid id, int series, float weight, int reps);
+        Task Update(Guid id, int series, float weight, int reps);
 
-        void Delete(Guid id);
+        Task Delete(Guid id);
     }
 }

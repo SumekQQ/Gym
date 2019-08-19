@@ -1,149 +1,154 @@
-﻿using Gym.Core.Models;
+﻿using Gym.Core.Exceptions;
+using Gym.Core.Models;
 using Gym.Infrastructure.DTO;
-using Gym.Infrastructure.Extensions;
 using Gym.Infrastructure.Repositories;
 using Gym.Infrastructure.Services;
 using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 namespace Gym.Tests.Services
 {
     public class TrainingDayServiceTests : ServiceTestsTemplate
     {
         [Fact]
-        public void create_new_training_day_correctly()
+        public async Task get_single_training_day_if_not_exist()
         {
-            trainingPlanRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns(ExampleTrainingPlan);
-            trainingDayRepositoryMock.Setup(x => x.IsExist(It.IsAny<TrainingPlan>())).Returns(false);
-            trainingDayRepositoryMock.Setup(x => x.IsExist(It.IsAny<DateTime>())).Returns(false);
+            trainingDayRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).ReturnsAsync(value: null);
 
-            trainingDayService.CreateNew(ExampleTrainingPlan.Id, "description", DateTime.Now.ToString());
+            var ex = await Assert.ThrowsAsync<ServiceException>(() => trainingDayService.Get(ExampleTrainingDay.Id));
+
+            Assert.Equal(ErrorsCodes.ItemNotFound, ex.Code);
+            trainingDayRepositoryMock.Verify(x => x.Get(It.IsAny<Guid>()), Times.Once);
+        }
+
+        [Fact]
+        public async Task get_single_training_day_correctly()
+        {
+            trainingDayRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).ReturnsAsync(ExampleTrainingDay);
+
+            var trainingDay = await trainingDayService.Get(ExampleTrainingDay.Id);
+
+            Assert.Equal(trainingDay, mapperMock.Object.Map<TrainingDay, TrainingDayDTO>(ExampleTrainingDay));
+            trainingDayRepositoryMock.Verify(x => x.Get(It.IsAny<Guid>()), Times.Once);
+        }
+
+        [Fact]
+        public async Task get_collection_trainig_days_if_not_exist()
+        {
+            var trainingDaysDb = FakeDataBase.GetInstance().TrainingDay.Where(x => x.TrainingPlan == ExampleTrainingPlan);
+            trainingDayRepositoryMock.Setup(x => x.GetAll()).ReturnsAsync(value: null);
+
+            var ex = await Assert.ThrowsAsync<ServiceException>(() => trainingDayService.GetAll());
+
+            Assert.Equal(ErrorsCodes.ItemNotFound, ex.Code);
+            trainingDayRepositoryMock.Verify(x => x.GetAll(), Times.Once);
+        }
+
+        [Fact]
+        public async Task get_collection_trainig_days()
+        {
+            var trainingDaysDb = FakeDataBase.GetInstance().TrainingDay.Where(x => x.TrainingPlan == ExampleTrainingPlan);
+            trainingDayRepositoryMock.Setup(x => x.GetAll()).ReturnsAsync(trainingDaysDb);
+
+            var trainingDays = await trainingDayService.GetAll();
+
+            Assert.Equal(trainingDays, mapperMock.Object.Map<IEnumerable<TrainingDay>, IEnumerable<TrainingDayDTO>>(trainingDaysDb));
+            trainingDayRepositoryMock.Verify(x => x.GetAll(), Times.Once);
+        }
+
+        [Fact]
+        public async Task create_new_training_day()
+        {
+            trainingPlanRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).ReturnsAsync(ExampleTrainingPlan);
+            trainingDayRepositoryMock.Setup(x => x.IsExist(It.IsAny<TrainingPlan>())).ReturnsAsync(false);
+            trainingDayRepositoryMock.Setup(x => x.IsExist(It.IsAny<DateTime>())).ReturnsAsync(false);
+
+            await trainingDayService.CreateNew(ExampleTrainingPlan.Id, "description", DateTime.Now.ToString());
 
             trainingDayRepositoryMock.Verify(x => x.Add(It.IsAny<TrainingDay>()), Times.Once);
         }
 
         [Fact]
-        public void create_new_training_using_null_plan()
+        public async Task create_new_training_days_using_null_plan()
         {
-            trainingPlanRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns(value: null);
-            trainingDayRepositoryMock.Setup(x => x.IsExist(It.IsAny<TrainingPlan>())).Returns(false);
-            trainingDayRepositoryMock.Setup(x => x.IsExist(It.IsAny<DateTime>())).Returns(false);
+            trainingPlanRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).ReturnsAsync(value: null);
+            trainingDayRepositoryMock.Setup(x => x.IsExist(It.IsAny<TrainingPlan>())).ReturnsAsync(false);
+            trainingDayRepositoryMock.Setup(x => x.IsExist(It.IsAny<DateTime>())).ReturnsAsync(false);
 
-            Exception ex = Assert.Throws<Exception>(() => trainingDayService.CreateNew(ExampleTrainingPlan.Id, "description", DateTime.Now.ToString()));
+            var ex = await Assert.ThrowsAsync<ServiceException>(() => trainingDayService.CreateNew(ExampleTrainingPlan.Id, "description", DateTime.Now.ToString()));
 
-            Assert.Equal("Finding data not exist or return null value", ex.Message);
+            Assert.Equal(ErrorsCodes.ItemNotFound, ex.Code);
             trainingDayRepositoryMock.Verify(x => x.Add(It.IsAny<TrainingDay>()), Times.Never);
         }
 
         [Fact]
-        public void create_new_training_day_if_exist()
+        public async Task create_new_training_day_if_exist()
         {
-            trainingPlanRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns(ExampleTrainingPlan);
-            trainingDayRepositoryMock.Setup(x => x.IsExist(It.IsAny<TrainingPlan>())).Returns(true);
-            trainingDayRepositoryMock.Setup(x => x.IsExist(It.IsAny<DateTime>())).Returns(true);
+            trainingPlanRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).ReturnsAsync(ExampleTrainingPlan);
+            trainingDayRepositoryMock.Setup(x => x.IsExist(It.IsAny<TrainingPlan>())).ReturnsAsync(true);
+            trainingDayRepositoryMock.Setup(x => x.IsExist(It.IsAny<DateTime>())).ReturnsAsync(true);
 
-            Exception ex = Assert.Throws<Exception>(() => trainingDayService.CreateNew(ExampleTrainingPlan.Id, "description", DateTime.Now.ToString()));
+            var ex = await Assert.ThrowsAsync<ServiceException>(() => trainingDayService.CreateNew(ExampleTrainingPlan.Id, "description", DateTime.Now.ToString()));
 
-            Assert.Equal($"{ErrorsCodes.ItemExist}", ex.Message);
+            Assert.Equal(ErrorsCodes.ItemExist, ex.Code);
             trainingDayRepositoryMock.Verify(x => x.Add(It.IsAny<TrainingDay>()), Times.Never);
         }
 
         [Fact]
-        public void get_single_not_exist_day()
+        public async Task update_training_day_using_empty_plan()
         {
-            trainingDayRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns(value: null);
+            trainingPlanRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).ReturnsAsync(value: null);
+            trainingDayRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).ReturnsAsync(ExampleTrainingDay);
 
-            Exception ex = Assert.Throws<Exception>(() => trainingDayService.Get(ExampleTrainingDay.Id));
+            var ex = await Assert.ThrowsAsync<ServiceException>(() => trainingDayService.Update(ExampleTrainingDay.Id, ExampleTrainingPlan.Id, "description"));
 
-            Assert.Equal("Finding data not exist or return null value", ex.Message);
-        }
-
-        [Fact]
-        public void get_collection_using_null_plan()
-        {
-            trainingPlanRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns(value: null);
-
-            Exception ex = Assert.Throws<Exception>(() => trainingDayService.GetCollection(ExampleTrainingPlan.Id));
-
-            Assert.Equal("Finding data not exist or return null value", ex.Message);
-        }
-
-        [Fact]
-        public void get_single_correctly()
-        {
-            trainingDayRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns(ExampleTrainingDay);
-
-            var trainingDay = trainingDayService.Get(ExampleTrainingDay.Id);
-
-            Assert.Equal(trainingDay, mapperMock.Object.Map<TrainingDay, TrainingDayDTO>(ExampleTrainingDay));
-        }
-
-        [Fact]
-        public void get_collection_correctly()
-        {
-            var trainingDaysDb = FakeDataBase.GetInstance().TrainingDay.Where(x => x.TrainingPlan == ExampleTrainingPlan);
-            trainingPlanRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns(ExampleTrainingPlan);
-            trainingDayRepositoryMock.Setup(x => x.Get(It.IsAny<TrainingPlan>())).Returns(trainingDaysDb);
-
-            var trainingDays = trainingDayService.GetCollection(ExampleTrainingPlan.Id);
-
-            Assert.Equal(trainingDays, mapperMock.Object.Map<IEnumerable<TrainingDay>, IEnumerable<TrainingDayDTO>>(trainingDaysDb));
-        }
-
-        [Fact]
-        public void update_using_empty_plan()
-        {
-            trainingPlanRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns(value: null);
-            trainingDayRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns(ExampleTrainingDay);
-
-            Exception ex = Assert.Throws<Exception>(() => trainingDayService.Update(ExampleTrainingDay.Id, ExampleTrainingPlan.Id, "description"));
-
-            Assert.Equal("Finding data not exist or return null value", ex.Message);
+            Assert.Equal(ErrorsCodes.ItemNotFound, ex.Code);
             trainingDayRepositoryMock.Verify(x => x.Update(It.IsAny<TrainingDay>()), Times.Never);
         }
 
         [Fact]
-        public void update_if_day_not_exist()
+        public async Task update_training_day_if_day_not_exist()
         {
-            trainingPlanRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns(ExampleTrainingPlan);
-            trainingDayRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns(value: null);
+            trainingPlanRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).ReturnsAsync(ExampleTrainingPlan);
+            trainingDayRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).ReturnsAsync(value: null);
 
-            Exception ex = Assert.Throws<Exception>(() => trainingDayService.Update(ExampleTrainingDay.Id, ExampleTrainingPlan.Id, "description"));
+            var ex = await Assert.ThrowsAsync<ServiceException>(() => trainingDayService.Update(ExampleTrainingDay.Id, ExampleTrainingPlan.Id, "description"));
 
-            Assert.Equal("Finding data not exist or return null value", ex.Message);
+            Assert.Equal(ErrorsCodes.ItemNotFound, ex.Code);
             trainingDayRepositoryMock.Verify(x => x.Update(It.IsAny<TrainingDay>()), Times.Never);
         }
 
         [Fact]
-        public void update_correctly()
+        public async Task update_training_day()
         {
-            trainingPlanRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns(ExampleTrainingPlan);
-            trainingDayRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns(ExampleTrainingDay);
+            trainingPlanRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).ReturnsAsync(ExampleTrainingPlan);
+            trainingDayRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).ReturnsAsync(ExampleTrainingDay);
 
-            trainingDayService.Update(ExampleTrainingDay.Id, ExampleTrainingPlan.Id, "description");
+            await trainingDayService.Update(ExampleTrainingDay.Id, ExampleTrainingPlan.Id, "description");
 
             trainingDayRepositoryMock.Verify(x => x.Update(It.IsAny<TrainingDay>()), Times.Once);
         }
 
         [Fact]
-        public void delete_not_exist_item()
+        public async Task delete_training_day_not_exist_item()
         {
-            trainingDayRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns(value: null);
+            trainingDayRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).ReturnsAsync(value: null);
 
-            Exception ex = Assert.Throws<Exception>(() => trainingDayService.Delete(ExampleTrainingDay.Id));
+            var ex = await Assert.ThrowsAsync<ServiceException>(() => trainingDayService.Delete(ExampleTrainingDay.Id));
 
-            Assert.Equal("Finding data not exist or return null value", ex.Message);
+            Assert.Equal(ErrorsCodes.ItemNotFound, ex.Code);
             trainingDayRepositoryMock.Verify(x => x.Delete(It.IsAny<TrainingDay>()), Times.Never);
         }
 
         [Fact]
-        public void delete_correctly()
+        public async Task delete_training_day()
         {
-            trainingDayRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns(ExampleTrainingDay);
+            trainingDayRepositoryMock.Setup(x => x.Get(It.IsAny<Guid>())).ReturnsAsync(ExampleTrainingDay);
 
-            trainingDayService.Delete(ExampleTrainingDay.Id);
+            await trainingDayService.Delete(ExampleTrainingDay.Id);
 
             trainingDayRepositoryMock.Verify(x => x.Delete(It.IsAny<TrainingDay>()), Times.Once);
         }

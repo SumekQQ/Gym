@@ -1,31 +1,26 @@
 ﻿using Gym.Core.Models;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Gym.Core.Repositories
 {
     public interface IWeightResultRepository : IRepository
     {
-        WeightResult Get(Guid id);
+        Task<WeightResult> Get(Guid id);
 
-        IEnumerable<WeightResult> Get(TrainingDay trainingDay);
+        Task<IEnumerable<WeightResult>> Get(TrainingDay trainingDay);
 
-        IEnumerable<WeightResult> Get(Exercise exercise);
+        Task<IEnumerable<WeightResult>> Get(Exercise exercise);
 
-        IEnumerable<WeightResult> GetAll();
+        Task<IEnumerable<WeightResult>> GetAll();
 
-        bool IsExist(TrainingDay trainingDay, Exercise exercise);
+        Task<bool> IsExist(TrainingDay trainingDay, Exercise exercise);
 
-        bool IsExist(TrainingDay trainingDay);
+        Task Add(WeightResult result);
 
-        bool IsExist(Exercise exercise);
+        Task Delete(WeightResult result);
 
-        bool IsExist(Guid id);
-
-        void Add(WeightResult result);
-
-        void Delete(WeightResult result);
-
-        void Update(WeightResult result);
+        Task Update(WeightResult result);
     }
 }
