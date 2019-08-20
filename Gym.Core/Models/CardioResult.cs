@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Gym.Core.Exceptions;
+using System;
 
 namespace Gym.Core.Models
 {
@@ -24,15 +25,15 @@ namespace Gym.Core.Models
         protected override void SetExercise(Exercise exercise)
         {
             if (exercise.Category != Category.Cardio)
-                throw new Exception($"Can not create {exercise.Category.ToString()} as cardio result");
+                throw new DomainException(ErrorsCodes.IncorrectCategory, $"Can not create {exercise.Category.ToString()} as cardio result");
 
             base.SetExercise(exercise);
         }
 
         private void setDistance(int distance)
         {
-            if (distance < 0)
-                throw new Exception("Exercise distance can not be less than 0.");
+            if (distance <= 0)
+                throw new DomainException(ErrorsCodes.NeagtiveValue, "Exercise distance can not be less than 0.");
 
             if (distance != Distance)
                 Distance = distance;
@@ -45,17 +46,17 @@ namespace Gym.Core.Models
             time = "";
 
             if (singleTime.Length < 3)
-                throw new Exception("Training time should contain only hours, mins and seconds");
+                throw new DomainException(ErrorsCodes.IncorrectTimeFormats, "Training time should contain only hours, mins and seconds");
 
 
             for (int i = 0; i < singleTime.Length; i++)
             {
                 if (Int32.TryParse(singleTime[i], out singleTimeAsInt[i]) == false)
-                    throw new Exception($"Can not convert {singleTime[i]} to time value");
+                    throw new DomainException(ErrorsCodes.IncorrectTimeFormats, $"Can not convert {singleTime[i]} to time value");
 
                 if (i != 0 && singleTimeAsInt[i] >= 60)
                 {
-                    singleTimeAsInt[i-1] += singleTimeAsInt[i] / 60;
+                    singleTimeAsInt[i - 1] += singleTimeAsInt[i] / 60;
                     singleTimeAsInt[i] %= 60;
                 }
 

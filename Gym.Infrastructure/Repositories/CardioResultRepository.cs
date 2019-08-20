@@ -1,68 +1,54 @@
 ﻿using Gym.Core.Models;
 using Gym.Core.Repositories;
+using Gym.Infrastructure.EF;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Gym.Infrastructure.Repositories
 {
     public class CardioResultRepository : ICardioResultRepository
     {
-        private List<CardioResult> _results = FakeDataBase.GetInstance().CardioResults;
+        private readonly GymContext _context;
 
-        public void Add(CardioResult result)
+        public CardioResultRepository(GymContext context)
         {
-            _results.Add(result);
+            _context = context;
         }
 
-        public CardioResult Get(Guid id)
+        public async Task<CardioResult> Get(Guid id)
+            => await _context.CardioResults.SingleAsync(x => x.Id == id);
+
+        public async Task<IEnumerable<CardioResult>> Get(TrainingDay trainingDay)
+            => await _context.CardioResults.Where(x => x.TrainingDay == trainingDay).ToListAsync();
+
+        public async Task<IEnumerable<CardioResult>> Get(Exercise exercise)
+            => await _context.CardioResults.Where(x => x.Exercise == exercise).ToListAsync();
+
+        public async Task<IEnumerable<CardioResult>> GetAll()
+            => await _context.CardioResults.ToListAsync();
+
+        public async Task<bool> IsExist(TrainingDay trainingDay, Exercise exercise)
+            => await _context.CardioResults.AnyAsync(x => x.TrainingDay.Id == trainingDay.Id && x.Exercise.Id == exercise.Id);
+
+        public async Task Add(CardioResult result)
         {
-            return _results.Single(x => x.Id == id);
+            _context.Add(result);
+            await _context.SaveChangesAsync();
         }
 
-        public IEnumerable<CardioResult> Get(TrainingDay trainingDay)
+        public async Task Delete(CardioResult result)
         {
-            return _results.Where(x => x.TrainingDay == trainingDay);
+            _context.Remove(result);
+            await _context.SaveChangesAsync();
         }
 
-        public IEnumerable<CardioResult> Get(Exercise exercise)
+        public async Task Update(CardioResult result)
         {
-            return _results.Where(x => x.Exercise == exercise);
-        }
-
-        public IEnumerable<CardioResult> GetAll()
-        {
-            return _results;
-        }
-
-        public bool IsExist(TrainingDay trainingDay, Exercise exercise)
-        {
-            return IsExist(trainingDay) && IsExist(exercise);
-        }
-
-        public bool IsExist(TrainingDay trainingDay)
-        {
-            return _results.Exists(x => x.TrainingDay == trainingDay);
-        }
-
-        public bool IsExist(Exercise exercise)
-        {
-            return _results.Exists(x => x.Exercise == exercise);
-        }
-
-        public bool IsExist(Guid id)
-        {
-            return _results.Exists(x => x.Id == id);
-        }
-
-        public void Delete(CardioResult result)
-        {
-            _results.Remove(result);
-        }
-
-        public void Update(CardioResult result)
-        {
-
+            _context.Update(result);
+            await _context.SaveChangesAsync();
         }
     }
 }

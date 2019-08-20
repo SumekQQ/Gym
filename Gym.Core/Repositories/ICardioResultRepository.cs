@@ -1,31 +1,26 @@
 ﻿using Gym.Core.Models;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Gym.Core.Repositories
 {
     public interface ICardioResultRepository : IRepository
     {
-        CardioResult Get(Guid id);
+        Task<CardioResult> Get(Guid id);
 
-        IEnumerable<CardioResult> Get(TrainingDay trainingDay);
+        Task<IEnumerable<CardioResult>> Get(TrainingDay trainingDay);
 
-        IEnumerable<CardioResult> Get(Exercise exercise);
+        Task<IEnumerable<CardioResult>> Get(Exercise exercise);
 
-        IEnumerable<CardioResult> GetAll();
+        Task<IEnumerable<CardioResult>> GetAll();
 
-        bool IsExist(TrainingDay trainingDay, Exercise exercise);
+        Task<bool> IsExist(TrainingDay trainingDay, Exercise exercise);
 
-        bool IsExist(TrainingDay trainingDay);
+        Task Add(CardioResult result);
 
-        bool IsExist(Exercise exercise);
+        Task Delete(CardioResult result);
 
-        bool IsExist(Guid id);
-
-        void Add(CardioResult result);
-
-        void Delete(CardioResult result);
-
-        void Update(CardioResult result);
+        Task Update(CardioResult result);
     }
 }

@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
+using Gym.Core.Exceptions;
 using Gym.Core.Models;
 using Gym.Core.Repositories;
 using Gym.Infrastructure.DTO;
-using Gym.Infrastructure.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Gym.Infrastructure.Services
 {
@@ -21,41 +22,41 @@ namespace Gym.Infrastructure.Services
             _exerciseRepository = exerciseRepository;
         }
 
-        public CardioResultDTO Get(Guid id)
-            => _mapper.Map<CardioResult, CardioResultDTO>(Single(_resultRepository.Get(id)));
+        public async Task<CardioResultDTO> Get(Guid id)
+            => _mapper.Map<CardioResult, CardioResultDTO>(Single(await _resultRepository.Get(id)));
 
-        public IEnumerable<CardioResultDTO> Get(TrainingDay trainingDay)
-            => _mapper.Map<IEnumerable<CardioResult>, IEnumerable<CardioResultDTO>>(Collection(_resultRepository.Get(trainingDay)));
+        public async Task<IEnumerable<CardioResultDTO>> Get(TrainingDay trainingDay)
+            => _mapper.Map<IEnumerable<CardioResult>, IEnumerable<CardioResultDTO>>(Collection(await _resultRepository.Get(trainingDay)));
 
-        public IEnumerable<CardioResultDTO> Get(Exercise exercise)
-            => _mapper.Map<IEnumerable<CardioResult>, IEnumerable<CardioResultDTO>>(Collection(_resultRepository.Get(exercise)));
+        public async Task<IEnumerable<CardioResultDTO>> Get(Exercise exercise)
+            => _mapper.Map<IEnumerable<CardioResult>, IEnumerable<CardioResultDTO>>(Collection(await _resultRepository.Get(exercise)));
 
-        public void CreateNew(Guid trainingDayId, Guid exerciseId, int distance, string time)
+        public async Task CreateNew(Guid trainingDayId, Guid exerciseId, int distance, string time)
         {
-            var exercise = Single(_exerciseRepository.Get(exerciseId));
-            var trainingDay = Single(_trainingDayRepository.Get(trainingDayId));
+            var exercise = Single(await _exerciseRepository.Get(exerciseId));
+            var trainingDay = Single(await _trainingDayRepository.Get(trainingDayId));
 
-            if (_resultRepository.IsExist(trainingDay, exercise))
-                throw new Exception($"{ErrorsCodes.ItemExist}");
+            if (await _resultRepository.IsExist(trainingDay, exercise))
+                throw new ServiceException(ErrorsCodes.ItemExist, $"Cannot create item using trainingDay={trainingDay.Date} and exercise={exercise.Name}. Provided item currently exist.");
 
             var newCardioResult = new CardioResult(trainingDay, exercise, distance, time);
 
-            _resultRepository.Add(newCardioResult);
+            await _resultRepository.Add(newCardioResult);
         }
 
-        public void Update(Guid id, int distance, string time)
+        public async Task Update(Guid id, int distance, string time)
         {
-            var existResult = Single(_resultRepository.Get(id));
+            var existResult = Single(await _resultRepository.Get(id));
 
             existResult.Update(distance, time);
-            _resultRepository.Update(existResult);
+            await _resultRepository.Update(existResult);
         }
 
-        public void Delete(Guid id)
+        public async Task Delete(Guid id)
         {
-            var existResult = Single(_resultRepository.Get(id));
+            var existResult = Single(await _resultRepository.Get(id));
 
-            _resultRepository.Delete(existResult);
+            await _resultRepository.Delete(existResult);
         }
     }
 }

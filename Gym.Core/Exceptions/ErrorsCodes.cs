@@ -7,6 +7,7 @@
         public static string IncorrectName = "incorrect_name";
         public static string IncorrectData = "incorrect_data";
         public static string IncorrectCategory = "incorrect_category";
+        public static string IncorrectTimeFormats = "incorrect_time_formats";
         public static string DefaultExercise = "default_exercise";
         public static string NeagtiveValue = "neagtive_value";
     }
