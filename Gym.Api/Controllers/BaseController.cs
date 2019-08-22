@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace Gym.Api.Controllers
 {
@@ -22,7 +23,7 @@ namespace Gym.Api.Controllers
             _commandDispatcher = commandDispatcher;
         }
 
-        protected ActionResult GetSingle<T>(T data)
+        protected async Task<ActionResult> GetSingle<T>(T data)
         {
             if (data == null)
                 return NotFound();
@@ -30,7 +31,7 @@ namespace Gym.Api.Controllers
             return Json(data);
         }
 
-        protected ActionResult GetCollection<T>(IEnumerable<T> data)
+        protected async Task<ActionResult> GetCollection<T>(IEnumerable<T> data)
         {
             if (data.Count() == 0)
                 return NotFound();
@@ -38,26 +39,26 @@ namespace Gym.Api.Controllers
             return Json(data);
         }
 
-        protected ActionResult Post<T>(T command) where T : ICommand
+        protected async Task<ActionResult> Post<T>(T command) where T : ICommand
         {
-            return dispatch(command, true);
+            return await dispatch(command, true);
         }
 
-        protected ActionResult Put<T>(T command) where T : ICommand
+        protected async Task<ActionResult> Put<T>(T command) where T : ICommand
         {
-            return dispatch(command);
+            return await dispatch(command);
         }
 
-        protected ActionResult Delete<T>(T command) where T : ICommand
+        protected async Task<ActionResult> Delete<T>(T command) where T : ICommand
         {
-            return dispatch(command);
+            return await dispatch(command);
         }
 
-        private ActionResult dispatch<T>(T command, bool isPost = false) where T : ICommand
+        private async Task<ActionResult> dispatch<T>(T command, bool isPost = false) where T : ICommand
         {
             try
             {
-                _commandDispatcher.Dispatch(command);
+                await _commandDispatcher.Dispatch(command);
 
                 if (isPost)
                     return Created($"get", null);

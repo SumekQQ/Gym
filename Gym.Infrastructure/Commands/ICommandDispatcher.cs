@@ -1,7 +1,9 @@
-﻿namespace Gym.Infrastructure.Commands
+﻿using System.Threading.Tasks;
+
+namespace Gym.Infrastructure.Commands
 {
     public interface ICommandDispatcher
     {
-        void Dispatch<T>(T command) where T : ICommand;
+        Task Dispatch<T>(T command) where T : ICommand;
     }
 }

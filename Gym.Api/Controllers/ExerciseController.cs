@@ -4,6 +4,7 @@ using Gym.Infrastructure.Commands.Exercise;
 using Gym.Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Threading.Tasks;
 
 namespace Gym.Api.Controllers
 {
@@ -18,33 +19,33 @@ namespace Gym.Api.Controllers
         }
 
         [HttpGet]
-        public ActionResult Get()
+        public async Task<ActionResult> Get()
         {
-            return GetCollection(_exerciseService.GetAll());
+            return await GetCollection(await _exerciseService.GetAll());
         }
 
         [HttpGet("{id}")]
-        public ActionResult Get(Guid id)
+        public async Task<ActionResult> Get(Guid id)
         {
-            return GetSingle(_exerciseService.Get(id));
+            return await GetSingle(await _exerciseService.Get(id));
         }
 
         [HttpPost]
-        public ActionResult CreateNew([FromBody] CreateExercise command)
+        public async Task<ActionResult> CreateNew([FromBody] CreateExercise command)
         {
-            return Post(command);
+            return await Post(command);
         }
 
         [HttpPut]
-        public ActionResult Update([FromBody] UpdateExercise command)
+        public async Task<ActionResult> Update([FromBody] UpdateExercise command)
         {
-            return Put(command);
+            return await Put(command);
         }
 
         [HttpDelete("{id}")]
-        public ActionResult Delete(Guid id)
+        public async Task<ActionResult> Delete([FromBody] DeleteCommand command)
         {
-            return Delete(new DeleteExercise(id));
+            return await Delete(command);
         }
     }
 }

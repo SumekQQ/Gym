@@ -4,7 +4,7 @@ using Gym.Infrastructure.Services;
 
 namespace Gym.Infrastructure.Handlers.Exercise
 {
-    public class DeleteExerciseHandler : ICommandHandler<DeleteExercise>
+    public class DeleteExerciseHandler : ICommandHandler<DeleteCommand>
     {
         private readonly IExerciseService _exerciseService;
 
@@ -13,7 +13,7 @@ namespace Gym.Infrastructure.Handlers.Exercise
             _exerciseService = exerciseService;
         }
 
-        public void Handle(DeleteExercise command)
+        public void Handle(DeleteCommand command)
         {
             _exerciseService.Delete(command.Id);
         }

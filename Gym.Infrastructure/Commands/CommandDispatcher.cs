@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using System;
+using System.Threading.Tasks;
 
 namespace Gym.Infrastructure.Commands
 {
@@ -12,7 +13,7 @@ namespace Gym.Infrastructure.Commands
             _context = context;
         }
 
-        public void Dispatch<T>(T command) where T : ICommand
+        public async Task Dispatch<T>(T command) where T : ICommand
         {
             if (command == null)
                 throw new Exception("Command can not be null");

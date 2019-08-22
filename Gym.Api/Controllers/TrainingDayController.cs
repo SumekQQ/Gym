@@ -1,54 +1,51 @@
-﻿//using Gym.Core.Repositories;
-//using Gym.Infrastructure.Commands;
-//using Gym.Infrastructure.Commands.TrainingDay;
-//using Gym.Infrastructure.Services;
-//using Microsoft.AspNetCore.Mvc;
-//using System;
+﻿using Gym.Core.Repositories;
+using Gym.Infrastructure.Commands;
+using Gym.Infrastructure.Commands.TrainingDay;
+using Gym.Infrastructure.Services;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Threading.Tasks;
 
-//namespace Gym.Api.Controllers
-//{
-//    public class TrainingDayController : BaseController
-//    {
-//        private readonly ITrainingDayService _trainingDayService;
+namespace Gym.Api.Controllers
+{
+    public class TrainingDayController : BaseController
+    {
+        private readonly ITrainingDayService _trainingDayService;
 
-//        public TrainingDayController(ITrainingDayService trainingDayService,
-//            ICommandDispatcher commandDispatcher) : base(commandDispatcher)
-//        {
-//            _trainingDayService = trainingDayService;
-//        }
+        public TrainingDayController(ITrainingDayService trainingDayService,
+            ICommandDispatcher commandDispatcher) : base(commandDispatcher)
+        {
+            _trainingDayService = trainingDayService;
+        }
 
-//        [HttpGet]
-//        public ActionResult GetAll()
-//        {
-//            return Collection(_trainingDayService.GetAll());
-//        }
+        [HttpGet]
+        public async Task<ActionResult> GetAll()
+        {
+            return await GetCollection(await _trainingDayService.GetAll());
+        }
 
-//        [HttpGet("{id}")]
-//        public ActionResult Get(Guid id)
-//        {
-//            return Single(_trainingDayService.Get(id));
-//        }
+        [HttpGet("{id}")]
+        public async Task<ActionResult> Get(Guid id)
+        {
+            return await GetSingle(await _trainingDayService.Get(id));
+        }
 
-//        [HttpPost]
-//        public ActionResult CreateNew([FromBody] CreateTrainingDay command)
-//        {
-//            Dispatch(command);
+        [HttpPost]
+        public async Task<ActionResult> CreateNew([FromBody] CreateTrainingDay command)
+        {
+            return await Post(command);
+        }
 
-//            return Created($"get/", null);
-//        }
-  
-//        [HttpPut]
-//        public ActionResult Update([FromBody] UpdateTrainingDay command)
-//        {
-//            return Created($"get/", null);
-//        }
+        [HttpPut]
+        public async Task<ActionResult> Update([FromBody] UpdateTrainingDay command)
+        {
+            return await Put(command);
+        }
 
-//        [HttpDelete("{id}")]
-//        public ActionResult Delete(Guid id)
-//        {
-//            _trainingDayService.Delete(id);
-
-//            return Ok();
-//        }
-//    }
-//}
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete([FromBody] DeleteCommand command)
+        {
+            return await Delete(command);
+        }
+    }
+}
