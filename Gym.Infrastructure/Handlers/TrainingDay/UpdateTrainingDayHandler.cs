@@ -1,6 +1,7 @@
 ﻿using Gym.Infrastructure.Commands;
 using Gym.Infrastructure.Commands.TrainingDay;
 using Gym.Infrastructure.Services;
+using System.Threading.Tasks;
 
 namespace Gym.Infrastructure.Handlers.TrainingDay
 {
@@ -13,9 +14,9 @@ namespace Gym.Infrastructure.Handlers.TrainingDay
             _trainingDayService = trainingDayService;
         }
 
-        public void Handle(UpdateTrainingDay command)
+        public async Task Handle(UpdateTrainingDay command)
         {
-            _trainingDayService.Update(command.Id, command.TrainingPlanId, command.Description);
+            await _trainingDayService.Update(command.Id, command.TrainingPlanId, command.Description);
         }
     }
 }

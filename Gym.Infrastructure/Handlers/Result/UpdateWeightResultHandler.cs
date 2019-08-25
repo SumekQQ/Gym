@@ -1,6 +1,7 @@
 ﻿using Gym.Infrastructure.Commands;
 using Gym.Infrastructure.Commands.Result;
 using Gym.Infrastructure.Services;
+using System.Threading.Tasks;
 
 namespace Gym.Infrastructure.Handlers.Result
 {
@@ -13,9 +14,9 @@ namespace Gym.Infrastructure.Handlers.Result
             _weightResultService = weightResultService;
         }
 
-        public void Handle(UpdateWeightResult command)
+        public async Task Handle(UpdateWeightResult command)
         {
-            _weightResultService.Update(command.Id, command.Series, command.Weight, command.Reps);
+            await _weightResultService.Update(command.Id, command.Series, command.Weight, command.Reps);
         }
     }
 }

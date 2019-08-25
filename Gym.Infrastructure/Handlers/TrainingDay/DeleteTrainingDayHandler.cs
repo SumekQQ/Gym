@@ -1,10 +1,11 @@
 ﻿using Gym.Infrastructure.Commands;
 using Gym.Infrastructure.Commands.TrainingDay;
 using Gym.Infrastructure.Services;
+using System.Threading.Tasks;
 
 namespace Gym.Infrastructure.Handlers.TrainingDay
 {
-    public class DeleteTrainingDayHandler : ICommandHandler<DeleteCommand>
+    public class DeleteTrainingDayHandler : ICommandHandler<DeleteTrainingDay>
     {
         private readonly ITrainingDayService _trainingDayService;
 
@@ -13,9 +14,9 @@ namespace Gym.Infrastructure.Handlers.TrainingDay
             _trainingDayService = trainingDayService;
         }
 
-        public void Handle(DeleteCommand command)
+        public async Task Handle(DeleteTrainingDay command)
         {
-            _trainingDayService.Delete(command.Id);
+            await _trainingDayService.Delete(command.TrainingPlanId);
         }
     }
 }

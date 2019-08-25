@@ -57,14 +57,14 @@ namespace Gym.Api.Controllers
         [HttpDelete]
         public async Task<ActionResult> Delete([FromBody] DeleteWeightResult command)
         {
-            return await Delete(command);
+            return await Remove(command);
         }
 
         [Route("/cardio/{id}")]
         [HttpDelete]
         public async Task<ActionResult> Delete([FromBody] DeleteCardioResult command)
         {
-            return await Delete(command);
+            return await Remove(command);
         }
     }
 }

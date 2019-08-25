@@ -1,7 +1,9 @@
-﻿namespace Gym.Infrastructure.Commands
+﻿using System.Threading.Tasks;
+
+namespace Gym.Infrastructure.Commands
 {
     public interface ICommandHandler<T> where T : ICommand
     {
-        void Handle(T command);
+        Task Handle(T command);
     }
 }

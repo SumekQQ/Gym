@@ -3,6 +3,7 @@ using Gym.Infrastructure.Commands;
 using Gym.Infrastructure.Commands.Result;
 using Gym.Infrastructure.Services;
 using System;
+using System.Threading.Tasks;
 
 namespace Gym.Infrastructure.Handlers.Result
 {
@@ -15,9 +16,9 @@ namespace Gym.Infrastructure.Handlers.Result
             _cardioResultService = cardioResultService;
         }
 
-        public void Handle(UpdateCardioResult command)
+        public async Task Handle(UpdateCardioResult command)
         {
-            _cardioResultService.Update(command.Id, command.Distance, command.Time);
+            await _cardioResultService.Update(command.Id, command.Distance, command.Time);
         }
     }
 }

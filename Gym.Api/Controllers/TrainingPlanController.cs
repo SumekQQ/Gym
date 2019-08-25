@@ -42,9 +42,9 @@ namespace Gym.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete([FromBody] DeleteCommand command)
+        public async Task<ActionResult> Delete([FromBody] DeleteTrainingPlan command)
         {
-            return await Delete(command);
+            return await Remove(command);
         }
     }
 }

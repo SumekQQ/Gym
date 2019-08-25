@@ -1,10 +1,11 @@
 ﻿using Gym.Infrastructure.Commands;
 using Gym.Infrastructure.Commands.Result;
 using Gym.Infrastructure.Services;
+using System.Threading.Tasks;
 
 namespace Gym.Infrastructure.Handlers.Result
 {
-    public class DeleteWeightResultHandler : ICommandHandler<DeleteCommand>
+    public class DeleteWeightResultHandler : ICommandHandler<DeleteWeightResult>
     {
         private readonly IWeightResultService _weightResultService;
 
@@ -13,9 +14,9 @@ namespace Gym.Infrastructure.Handlers.Result
             _weightResultService = weightResultService;
         }
 
-        public void Handle(DeleteCommand command)
+        public async Task Handle(DeleteWeightResult command)
         {
-            _weightResultService.Delete(command.Id);
+            await _weightResultService.Delete(command.Id);
         }
     }
 }

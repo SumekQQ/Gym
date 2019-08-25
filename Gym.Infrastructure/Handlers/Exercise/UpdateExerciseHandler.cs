@@ -1,6 +1,7 @@
 ﻿using Gym.Infrastructure.Commands;
 using Gym.Infrastructure.Commands.Exercise;
 using Gym.Infrastructure.Services;
+using System.Threading.Tasks;
 
 namespace Gym.Infrastructure.Handlers.Exercise
 {
@@ -13,9 +14,9 @@ namespace Gym.Infrastructure.Handlers.Exercise
             _exerciseService = exerciseService;
         }
 
-        public void Handle(UpdateExercise command)
+        public async Task Handle(UpdateExercise command)
         {
-            _exerciseService.Update(command.Id, command.Name, command.Category);
+            await _exerciseService.Update(command.Id, command.Name, command.Category);
         }
     }
 }

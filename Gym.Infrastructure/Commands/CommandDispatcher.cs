@@ -19,7 +19,7 @@ namespace Gym.Infrastructure.Commands
                 throw new Exception("Command can not be null");
 
             var handler = _context.Resolve<ICommandHandler<T>>();
-            handler.Handle(command);
+            await handler.Handle(command);
         }
     }
 }

@@ -49,7 +49,7 @@ namespace Gym.Api.Controllers
             return await dispatch(command);
         }
 
-        protected async Task<ActionResult> Delete<T>(T command) where T : ICommand
+        protected async Task<ActionResult> Remove<T>(T command) where T : ICommand
         {
             return await dispatch(command);
         }
@@ -58,7 +58,7 @@ namespace Gym.Api.Controllers
         {
             try
             {
-                await _commandDispatcher.Dispatch(command);
+                 await _commandDispatcher.Dispatch(command);
 
                 if (isPost)
                     return Created($"get", null);

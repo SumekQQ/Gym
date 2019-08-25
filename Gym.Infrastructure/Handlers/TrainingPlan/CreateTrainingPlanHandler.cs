@@ -3,6 +3,7 @@ using Gym.Infrastructure.Commands.TrainingPlan;
 using Gym.Infrastructure.DTO;
 using Gym.Infrastructure.Services;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Gym.Infrastructure.Handlers.TrainingPlan
 {
@@ -15,9 +16,9 @@ namespace Gym.Infrastructure.Handlers.TrainingPlan
             _trainingPlanService = trainingPlanService;
         }
 
-        public void Handle(CreateTrainingPlan command)
+        public async Task Handle(CreateTrainingPlan command)
         {
-            _trainingPlanService.CreateNew(command.Name, command.ExerciseIds);
+            await _trainingPlanService.CreateNew(command.Name, command.ExerciseIds);
         }
     }
 }

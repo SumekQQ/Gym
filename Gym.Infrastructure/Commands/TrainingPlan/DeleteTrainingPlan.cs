@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace Gym.Infrastructure.Commands
+namespace Gym.Infrastructure.Commands.TrainingPlan
 {
-    public class DeleteCommand : ICommand
+    public class DeleteTrainingPlan : ICommand
     {
         public Guid Id { get; set; }
+
     }
 }
